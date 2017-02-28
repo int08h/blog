@@ -28,21 +28,6 @@
         <li>{{ .Title }}</li>
       </ol>
 
-      {{ $params := .Params }}
-      {{ range $key, $value := $.Site.Taxonomies }}
-      {{ if isset $params $key }}
-      <ul class="p-facts">
-        <li>
-          <header><a href="{{ $.Site.BaseURL }}{{ $key | urlize }}/">{{ $key }}</a></header>
-          <ul>
-            {{ range (index $params $key) }}
-            <li><a href="{{ $.Site.BaseURL }}{{ $key | urlize }}/{{ . | urlize }}/">{{ . }}</a></li>
-            {{ end }}
-          </ul>
-        </li>
-      </ul>
-      {{ end }}
-      {{ end }}
     </section>
   </footer>
 </article>

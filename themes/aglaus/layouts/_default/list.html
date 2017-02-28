@@ -9,7 +9,11 @@
   {{ end }}
 
   <ul class="p-articles">
-    {{ range .Paginator.Pages }}<li>{{ .Render "li" }}</li>{{ end }}
+    {{ range .Paginator.Pages }}
+      {{ if not (isset .Params "colophon") }}
+        <li>{{ .Render "li" }}</li>
+      {{ end }}
+    {{ end }}
   </ul>
 </div>
 

@@ -1,11 +1,10 @@
 +++
 date = "2017-02-21T17:17:39-06:00"
-title = "XX About int08h"
+title = "About int08h"
 description = ""
+colophon = "true"
 +++
 
-# About 
-
-## `int08h` wtf?
+## WTF is `int08h`?
 
 It's the DOS timer interrupt.
