@@ -7,12 +7,6 @@
       "@id":"{{ .Site.BaseURL }}"
     },
     "headline": "{{ .Title }} - {{ .Site.Title }}",
-    "image": {
-      "@type": "ImageObject",
-      "url": "{{ .Site.BaseURL }}{{ .Params.thumbnail | default "images/default.png" }}",
-      "height": 800,
-      "width": 800
-    },
     "datePublished": "{{ .Date.Format "2017-02-22T15:04:05Z" }}",
     "dateModified": "{{ .Lastmod.Format "2017-02-22T15:04:05Z" }}",
     "author": {

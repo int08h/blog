@@ -2,48 +2,36 @@
 <html>
   <head>
     {{ partial "meta.html" . }}
-    {{ with .Site.Params.googlefonts }}
-      <link href="{{ . }}" rel="stylesheet">
-    {{ else }}
     <link href="https://fonts.googleapis.com/css?family=Exo+2:600|Source+Sans+Pro" rel="stylesheet">
-    {{ end }}
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/androidstudio.min.css">
     <title>{{ block "title" . }}{{ end }}{{ .Site.Title }}</title>
-    {{ if .Site.GoogleAnalytics }}
-      <script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>
-    {{ end }}
     {{ block "meta" . }}{{ end }}
     <style>
       {{ replaceRE " +" " " (replaceRE "\n" "" (partial "styles.css" .)) | safeCSS }}
-
-      {{ range where .Site.Pages ".Params.thumbnail" "!=" nil }} .article-{{ .Source.Path | md5 }} .thumbnail { background-image: url({{ $.Site.BaseURL }}{{ .Params.thumbnail }});  } {{ end }}
     </style>
+    <script>
+      window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+      ga('create', 'UA-92410918-1', 'auto');
+      ga('set', 'transport', 'beacon');
+      ga('send', 'pageview');
+    </script>
+    <script async src='https://www.google-analytics.com/analytics.js'></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/languages/rust.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
   </head>
 
   <body>
-    {{ if ne (getenv "HUGO_ENV") "DEV" }}
-    {{ with .Site.GoogleAnalytics }}
-    <amp-analytics type="googleanalytics" id="analytics1">
-      <script type="application/json">
-        {
-          "vars": {
-            "account": "{{ . }}"
-          },
-          "triggers": {
-            "trackPageview": {
-              "on": "visible",
-              "request": "pageview"
-            }
-          }
-        }
-      </script>
-    </amp-analytics>
-    {{ end }}
-    {{ end }}
 
     <header class="l-header">
       <div class="l-container">
         <div class="h-logo p-logo">
           <a href="{{ .Site.BaseURL }}" class="h-logo">{{ .Site.Title }}</a>
+          <span class="h-colophon">
+            <a href="{{ .Site.BaseURL }}" class="h-tiny">Blog</a>
+            <a href="https://github.com/int08h" class="h-tiny">Github</a>
+            <a href="{{ .Site.BaseURL }}about" class="h-tiny">About</a>
+          </span>
         </div>
       </div>
     </header>
@@ -56,9 +44,11 @@
 
     <footer class="l-footer">
       <div class="l-container">
-        <p>{{ with .Site.Copyright }}{{ . | safeHTML }}{{ else }}<span class="h-logo">&copy; {{ .Site.Title }}</span>{{ end }}</p>
+        <p><span class="h-logo">
+          Copyright &copy; 2017 int08h LLC. Content licensed <a href="https://creativecommons.org/licenses/by-sa/4.0/legalcode">CC BY-SA 4.0</a>.
+        </span></p>
         <aside>
-          <p>Powered by <a href="https://gohugo.io/">Hugo</a> | Based on <a href="https://github.com/dim0627/hugo_theme_aglaus" class="h-logo">Aglaus</a> theme by <a href="http://yet.unresolved.xyz/">Daisuke Tsuji</a>.</p>
+          <p>Powered by <a href="https://gohugo.io/">Hugo</a>, theme derived from <a href="https://github.com/dim0627/hugo_theme_aglaus" class="h-logo">Aglaus</a>.</p>
         </aside>
       </div>
     </footer>

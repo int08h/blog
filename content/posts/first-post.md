@@ -1,11 +1,9 @@
 +++
 draft = false
 date = "2017-02-21T17:17:39-06:00"
-title = "first post"
-
+title = "Obligatory first post"
+description = "This is the description for the article."
 +++
-
-The obligatory "first post" post.
 
 # Nearenough
 **Nearenough** is a Java client of the [Roughtime](https://roughtime.googlesource.com/roughtime) 

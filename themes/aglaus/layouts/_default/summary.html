@@ -5,7 +5,7 @@
       <div class="clearfix">
         <h1 class="title">{{ .Title }}</h1>
         <ul class="p-facts">
-          <li><time datetime="{{ .Lastmod.Format "2006-01-02T15:04:05JST" }}">{{ .Lastmod.Format ( .Site.Params.dateformat | default "Jan 2, 2006") }}</time></li>
+          <li><time datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z" }}">{{ .Lastmod.Format ( .Site.Params.dateformat | default "Jan 2, 2006") }}</time></li>
           {{ with .Section }}<li><a href="{{ $.Site.BaseURL }}{{ . | urlize }}/">{{ . }}</a></li>{{ end }}
           {{ if eq (getenv "HUGO_ENV") "DEV" }}
           <li>{{ .WordCount }} Words</li>
@@ -16,11 +16,7 @@
     </header>
   </div>
 
-  {{ partial "share.html" . }}
-
   <div class="article-body">{{ .Content }}</div>
-
-  {{ partial "share.html" . }}
 
   <footer class="article-footer">
     <section>
