@@ -1,8 +1,6 @@
 languageCode = "en-us"
 title = "int08h"
-baseurl = "http://www.int08h.com/"
-
-googleAnalytics = "UA-XXXXXXXX-XX" 
+baseurl = "https://www.int08h.com/"
 
 [params]
   #dateformat = "2017-01-01" 
