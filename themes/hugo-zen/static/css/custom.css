@@ -1,14 +1,43 @@
 body {
-  font-family: "Roboto", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: 'Merriweather', serif;
+  font-weight: 400;
   background-color: #FCFCFC;
 }
 
-h1 { font-size: 2.1rem; }
-h2 { font-size: 1.9rem; }
-h3 { font-size: 1.7rem; }
-h4,
-h5,
-h6 { font-size: 1.5rem; }
+a {
+  color: #303F9F;
+}
+
+a:hover {
+  color: #7986CB;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Merriweather Sans', sans-serif;
+  font-weight: 400;
+}
+
+h1 { 
+  font-size: 2.1rem; 
+}
+h2 { 
+  font-size: 1.9rem; 
+  margin-bottom: 0.5rem;
+}
+h3 { 
+  font-size: 1.6rem; 
+  margin-bottom: 0.5rem;
+  color: #455A64;
+}
+h4, h5, h6 { 
+  font-size: 1.5rem; 
+  margin-bottom: 0.5rem;
+  color: #455A64;
+}
+
+strong, b {
+  font-weight: 700;
+}
 
 img {
   max-width: 100%;
@@ -17,19 +46,30 @@ img {
   border: 0;
 }
 
-header,
-footer {
+header, footer {
+  font-family: 'Merriweather Sans', sans-serif;
   margin: 4rem 0;
-  text-align: center;
+  text-align: left;
+}
+
+footer {
+  font-size: 1.4rem;
 }
 
 main {
   margin: 4rem 0;
 }
 
+ul > li {
+  list-style: disc inside;
+  margin-bottom: 0;
+  margin-top: 0.25rem;
+  margin-left: 1.0rem;
+}
+
 .container {
   width: 90%;
-  max-width: 600px;
+  max-width: 800px;
 }
 
 .header-logo img {
@@ -44,7 +84,30 @@ main {
 }
 
 .site-title {
-  margin-top: 2rem;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-family: monospace;
+  font-size: 3rem;
+  line-height: 1rem;
+}
+.site-title a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.site-colophon {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  padding-top: 0px;
+  padding-left: 4rem;
+}
+.site-colophon a {
+  color: inherit;
+  text-decoration: none;
+}
+.site-colophon a:hover {
+  text-decoration: underline;
 }
 
 .entry-title {
@@ -55,10 +118,14 @@ main {
   text-decoration: none;
 }
 
+.entry-title a:hover {
+  text-decoration: underline;
+}
+
 .entry-meta {
   display: inline-block;
   margin-bottom: 2rem;
-  font-size: 1.7rem;
+  font-size: 1.6rem;
   color: #888;
 }
 
@@ -67,10 +134,12 @@ main {
 }
 
 .hr {
-  height: 1px;
-  margin: 2rem 0;
+  height: 2px;
+  margin: 1rem 0;
   background: #E1E1E1;
-  background: -webkit-gradient(linear, left top, right top, from(white), color-stop(#E1E1E1), to(white));
-  background: -webkit-linear-gradient(left, white, #E1E1E1, white);
-  background: linear-gradient(to right, white, #E1E1E1, white);
 }
+
+header .hr {
+ margin-top: 0;
+}
+

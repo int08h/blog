@@ -1,14 +1,9 @@
 
 <footer role="contentinfo">
   <div class="hr"></div>
-  <div class="footer-link">
-    {{ with .Site.Params.email }}<a href="mailto:{{ . }}" target="_blank">Email</a>{{ end }}
-    {{ with .Site.Params.twitter }}<a href="{{ . }}" target="_blank">Twitter</a>{{ end }}
-    {{ with .Site.Params.facebook }}<a href="{{ . }}" target="_blank">Facebook</a>{{ end }}
-    {{ with .Site.Params.github }}<a href="{{ . }}" target="_blank">GitHub</a>{{ end }}
-    {{ with .Site.Params.gitlab }}<a href="{{ . }}" target="_blank">GitLab</a>{{ end }}
+  <div class="copyright">Copyright &copy; 2017 int08h LLC. Content made available under 
+      the <a href="//creativecommons.org/licenses/by-sa/4.0/legalcode">CC-BY-SA 4.0</a> license.
   </div>
-  <div class="copyright">Copyright &copy; {{ .Site.Copyright | safeHTML }}</div>
 </footer>
 
 </div>
