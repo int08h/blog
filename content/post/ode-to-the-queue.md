@@ -4,12 +4,19 @@ title = "Ode to Dmitry Vyukov's MPSC queue"
 
 +++
 
-http://www.1024cores.net/home/lock-free-algorithms/queues/intrusive-mpsc-node-based-queue
+This post pays homage to a profoundly elegant and parsimonious 
+
+Strictly speaking, DV-MPSC looks pretty bad:
+
+1. It provides only a **blocking** progress guarantee 
+2. The `push` operation is not linearizable.
+
+http://www.1024cores.net/home/lock-free-algorithms/queues/non-intrusive-mpsc-node-based-queue
 
 ```c++
 /*
  * Minimal C++ implementation to illustrate the spirit of the algorithm. 
- * Hopefully accessable to most readers. Not intended as a production example.
+ * Hopefully accessible to most readers. Not production code.
  */
 struct Node {
   std::atomic<Node*> next;
@@ -49,3 +56,10 @@ private:
 };
 ```
 
+## Progress
+
+DV-MPSC provides only a **blocking** progress guarantee, but that pretty much doesn't matter.
+
+## Linearizability (Lack Of)
+
+Bit Java implementations. More than once. 

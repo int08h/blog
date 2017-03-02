@@ -30,7 +30,7 @@ An [Intel 8524](http://wiki.osdev.org/Programmable_Interval_Timer) programmable 
 per second (every 55 milliseconds). The `int08h` handler was responsible for calling `int1Ch` which was the preferred 
 periodic interrupt for "well behaved" programs. 
 
-Of course, not all programs were well behaved. Those that revectored `int08h` (or revectored any of the lower interrupts) 
+Of course, not all programs were well behaved. Those that re-vectored `int08h` (or re-vectored any of the lower interrupts) 
 were typically quite *interesting*.
 
 
