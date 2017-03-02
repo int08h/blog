@@ -1,22 +1,27 @@
 +++
 date = "2017-03-01T13:19:09-06:00"
-title = "Ode to Dmitry Vyukov's MPSC queue"
+title = "Ode to Dmitry Vyukov's MPSC Queue"
 
 +++
 
-This post pays homage to a profoundly elegant and parsimonious 
+This post pays homage to [Dmitry Vyukov](https://twitter.com/dvyukov)'s 
+elegant, practical, and deceptively subtle Multi-Producer Single-Consumer (MPSC) queue design. 
 
-Strictly speaking, DV-MPSC looks pretty bad:
+## Queue Implementation
 
-1. It provides only a **blocking** progress guarantee 
-2. The `push` operation is not linearizable.
-
-http://www.1024cores.net/home/lock-free-algorithms/queues/non-intrusive-mpsc-node-based-queue
+The remainder of this article will reference the C++ implementation below. This is the 
+[non-intrusive](http://www.1024cores.net/home/lock-free-algorithms/queues/non-intrusive-mpsc-node-based-queue) 
+version of the algorithm which is slightly simpler. Perfomance sensitive applications likely prefer the 
+[intrusive](http://www.1024cores.net/home/lock-free-algorithms/queues/intrusive-mpsc-node-based-queue)
+version.
 
 ```c++
 /*
- * Minimal C++ implementation to illustrate the spirit of the algorithm. 
- * Hopefully accessible to most readers. Not production code.
+ * Minimal C++ implementation of the non-intrusive Vyukov MPSC queue. 
+ * Illustrates the spirit of the algorithm while being accessible 
+ * to most readers. Not production code.
+ *
+ * Nodes are enqueued at the *tail*, and removed from the *head*.
  */
 struct Node {
   std::atomic<Node*> next;
@@ -56,6 +61,39 @@ private:
 };
 ```
 
+## Progress Conditions
+
+Some discussions of concurrent algorithms incorrectly use terms regarding the 
+**progress conditions** an algorithm provides. *Lock-free* and *wait-free* in particular
+are prone to misuse. For clarity, I'll use these terms as follows:
+
+| Progress Condition | Definition |
+|---|---|
+| *blocking* | Delay by one thread can prevent other threads from making progress |
+| *lock-free* | At least *one* thread makes progress |
+| *wait-free* | All threads make progress |
+
+### Dmitry
+
+Dmitry is a prolific developer. His site [1024cores.net](http://www.1024cores.net) accumulates years of 
+his insight into synchronization algorithms, multicore/multiprocessor development, and systems 
+programming. If nothing else, visit his [queue taxonomy](http://www.1024cores.net/home/lock-free-algorithms/queues)
+and be humbled knowing Dmitry has probably explored the very corners of each dimension in that design space.
+
+As of this writting Dmitry is at Google where he's working on all manner of 
+[wicked](https://github.com/google/syzkaller)-[cool](https://www.linuxplumbersconf.org/2016/ocw//system/presentations/3471/original/Sanitizers.pdf)
+[dynamic](https://github.com/dvyukov/go-fuzz) 
+testing tools. 
+
+
+Strictly speaking, DV-MPSC looks pretty bad:
+
+1. It provides only a **blocking** progress guarantee 
+2. The `push` operation is not linearizable.
+
+
+
+
 ## Progress
 
 DV-MPSC provides only a **blocking** progress guarantee, but that pretty much doesn't matter.
@@ -63,3 +101,7 @@ DV-MPSC provides only a **blocking** progress guarantee, but that pretty much do
 ## Linearizability (Lack Of)
 
 Bit Java implementations. More than once. 
+
+> **Parsimonious** (adjective)
+> ...[u]sing a minimal number of assumptions, steps, or conjectures.
+

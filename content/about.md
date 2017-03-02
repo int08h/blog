@@ -10,7 +10,7 @@ hidefromhome = "true"
 * Email `stuart {at} int08h.com`
 * Twitter `@int08h`
 
-PGP key can be obtained from [keybase.io/sstock](https://keybase.io/sstock) if required.
+PGP key at [keybase.io/sstock](https://keybase.io/sstock) if required.
 
 
 ## License and Disclaimer
@@ -27,7 +27,7 @@ employers past or present.
 
 Nerd history. It's the old-school [PC BIOS system timer interrupt](http://www.delorie.com/djgpp/doc/rbinter/id/48/0.html). 
 An [Intel 8524](http://wiki.osdev.org/Programmable_Interval_Timer) programmable interval timer generated it ~18.2 times 
-per second (every 55 milliseconds). The `int08h` handler was responsible for calling `int1Ch` which was the preferred 
+per second (every ~55 milliseconds). The `int08h` handler was responsible for calling `int1Ch` which was the preferred 
 periodic interrupt for "well behaved" programs. 
 
 Of course, not all programs were well behaved. Those that re-vectored `int08h` (or re-vectored any of the lower interrupts) 
@@ -43,4 +43,4 @@ Because the `.com` domain of my favorite PC interrupt, `int13h`, was already tak
 Generated using [Hugo](https://gohugo.io/). Theme derived from [Hugo-Zen](https://github.com/rakuishi/hugo-zen).
 Body typeface is [Merriweather](https://fonts.google.com/specimen/Merriweather) and headings are 
 [Merriweather Sans](https://fonts.google.com/specimen/Merriweather+Sans) with slightly tightened tracking. Monospace
-typeface is your system default with syntax highlighting by [`highlight.js`](https://highlightjs.org/).
+typeface is [Hack](http://sourcefoundry.org/hack/) with syntax highlighting by [`highlight.js`](https://highlightjs.org/).

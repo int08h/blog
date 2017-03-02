@@ -4,6 +4,27 @@ body {
   background-color: #FCFCFC;
 }
 
+pre, code {
+  font-family: Hack, monospace;
+}
+
+pre > code {
+  line-height: 1.5;
+}
+
+blockquote {
+  font-style: italic;
+  max-width: 90%;
+  margin-left: 2rem;
+  padding: 1.2rem 1rem 1.2rem 2rem;
+  position: relative;
+  background: #ECEFF1;
+  border-left: 8px solid #90A4AE;
+}
+blockquote > p {
+  margin: 0;
+}
+
 a {
   color: #303F9F;
 }
@@ -15,6 +36,7 @@ a:hover {
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Merriweather Sans', sans-serif;
   font-weight: 400;
+  letter-spacing: -0.05rem;
 }
 
 h1 { 
@@ -86,7 +108,7 @@ ul > li {
 .site-title {
   margin-top: 0;
   margin-bottom: 1rem;
-  font-family: monospace;
+  font-family: Hack, monospace;
   font-size: 3rem;
   line-height: 1rem;
 }
