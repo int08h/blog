@@ -12,6 +12,7 @@ elegant, practical, and deceptively subtle Multi-Producer Single-Consumer (MPSC)
 The remainder of this article will reference the C++ implementation below. This is the 
 [non-intrusive](http://www.1024cores.net/home/lock-free-algorithms/queues/non-intrusive-mpsc-node-based-queue) 
 version of the algorithm which is slightly simpler. Perfomance sensitive applications likely prefer the 
+slightly more complicated 
 [intrusive](http://www.1024cores.net/home/lock-free-algorithms/queues/intrusive-mpsc-node-based-queue)
 version.
 
@@ -63,15 +64,20 @@ private:
 
 ## Progress Conditions
 
-Some discussions of concurrent algorithms incorrectly use terms regarding the 
-**progress conditions** an algorithm provides. *Lock-free* and *wait-free* in particular
-are prone to misuse. For clarity, I'll use these terms as follows:
+It's easy to find discussions of concurrent algorithms where sloppy use of 
+[progress condition](http://doc.akka.io/docs/akka/current/general/terminology.html#Non-blocking_Guarantees__Progress_Conditions_)
+terms causes confusion. *Lock-free* in particular is prone to misuse, typically used 
+incorrectly in the context of "this code is implemented without using any 
+locks/mutexes/critical sections". 
 
-| Progress Condition | Definition |
-|---|---|
-| *blocking* | Delay by one thread can prevent other threads from making progress |
-| *lock-free* | At least *one* thread makes progress |
-| *wait-free* | All threads make progress |
+These terms have specific technical meanings. In the discussion below they mean the following:
+
+| Progress Condition |Definition   | A.K.A.|
+|---|---|---|
+| *wait-free* |  All threads can complete their call in a finite number of steps. This is the strongest guarantee of progress.| Everybody is getting work done |
+| *lock-free* |  At least *one* thread is always able to complete its call in a finite number of steps. Other threads may starve. A weaker than wait-free but overall progress is still guaranteed. | Somebody is getting work done  |
+| *blocking*  |  Delay or interruption by one thread can prevent other threads from completing their call. Potentially all threads may starve. No guarantee of progress can be made.|Can't work, hammer is broken |
+
 
 ### Dmitry
 

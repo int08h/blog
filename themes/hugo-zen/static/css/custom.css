@@ -14,15 +14,17 @@ pre > code {
 
 blockquote {
   font-style: italic;
-  max-width: 90%;
-  margin-left: 2rem;
+  margin: 2rem 0;
   padding: 1.2rem 1rem 1.2rem 2rem;
-  position: relative;
   background: #ECEFF1;
   border-left: 8px solid #90A4AE;
 }
 blockquote > p {
   margin: 0;
+}
+
+td, th {
+  padding: 0.5rem 1.2rem;
 }
 
 a {
