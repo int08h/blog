@@ -1,20 +1,26 @@
 +++
 date = "2017-03-01T13:19:09-06:00"
 title = "Ode to Dmitry Vyukov's MPSC Queue"
+hidefromhome = "true"
 
 +++
 
-This post pays homage to [Dmitry Vyukov](https://twitter.com/dvyukov)'s 
-elegant, practical, and deceptively subtle Multi-Producer Single-Consumer (MPSC) queue design. 
+Computer science practitioners are no doubt familiar with this saying:
+
+> In theory, there is no difference between practice and theory. In practice, there is.
+
+[Dmitry Vyukov](https://twitter.com/dvyukov)'s Multi-Producer Single-Consumer (MPSC) queue 
+design is an embodiment of the above witticism. It lacks many qualities that concurrent 
+queue algorithms "must have" to be theoretically sound. While in practice it's a simple
+and elegant solution to 99% of the problem space. This post pays homage to that connundrum.
 
 ## Queue Implementation
 
-The remainder of this article will reference the C++ implementation below. This is the 
+This article will reference the C++ implementation of the
 [non-intrusive](http://www.1024cores.net/home/lock-free-algorithms/queues/non-intrusive-mpsc-node-based-queue) 
-version of the algorithm which is slightly simpler. Perfomance sensitive applications likely prefer the 
-slightly more complicated 
+variant below. "Real world" perfomance sensitive applications will use the slightly more complicated 
 [intrusive](http://www.1024cores.net/home/lock-free-algorithms/queues/intrusive-mpsc-node-based-queue)
-version.
+version, but for explanatory purposes the non-intrusive version is better.
 
 ```c++
 /*
@@ -22,7 +28,7 @@ version.
  * Illustrates the spirit of the algorithm while being accessible 
  * to most readers. Not production code.
  *
- * Nodes are enqueued at the *tail*, and removed from the *head*.
+ * Nodes are enqueued at the *tail* and removed from the *head*.
  */
 struct Node {
   std::atomic<Node*> next;
@@ -64,20 +70,23 @@ private:
 
 ## Progress Conditions
 
-It's easy to find discussions of concurrent algorithms where sloppy use of 
+The Internet is replete with concurrent algorithm discussions where sloppy use of 
 [progress condition](http://doc.akka.io/docs/akka/current/general/terminology.html#Non-blocking_Guarantees__Progress_Conditions_)
-terms causes confusion. *Lock-free* in particular is prone to misuse, typically used 
-incorrectly in the context of "this code is implemented without using any 
-locks/mutexes/critical sections". 
+terminology causes confusion. *Lock-free* is particularly prone to misuse, typically 
+in the context of "this code is implemented without locks/mutexes/critical sections". 
+An implementation void of locks is quite different from an algorithm that 
+guarantees overall system progress: deadlock awaits misusers of `cmpxchg` 
+and `pthread_mutex_lock` alike. 
 
-These terms have specific technical meanings. In the discussion below they mean the following:
+This article uses technical progress condition terms as follows: 
 
-| Progress Condition |Definition   | A.K.A.|
+| Progress Condition |Definition   | Think of it as |
 |---|---|---|
-| *wait-free* |  All threads can complete their call in a finite number of steps. This is the strongest guarantee of progress.| Everybody is getting work done |
-| *lock-free* |  At least *one* thread is always able to complete its call in a finite number of steps. Other threads may starve. A weaker than wait-free but overall progress is still guaranteed. | Somebody is getting work done  |
-| *blocking*  |  Delay or interruption by one thread can prevent other threads from completing their call. Potentially all threads may starve. No guarantee of progress can be made.|Can't work, hammer is broken |
+| *wait-free* |  All threads complete their call in a finite number of steps. The strongest guarantee of progress.| Everybody is working |
+| *lock-free* |  At least *one* thread is always able to complete its call in a finite number of steps. Some threads may starve but overall system progress is guaranteed. | Somebody is working |
+| *blocking*  |  Delay or error in one thread can prevent other threads from completing their call. Potentially all threads may starve and the system makes no progress.| Somebody is probably working unless bad things happen |
 
+Here "*thread*" is an algorithm instance on a multiprocessor/multicore shared memory system able to execute multiple threads simultaneously. "*Completes its call*" is an invocation of `push` or `pop` that returns control to the caller. 
 
 ### Dmitry
 
