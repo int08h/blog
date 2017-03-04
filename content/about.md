@@ -25,14 +25,13 @@ employers past or present.
 
 ## WTF is an `int08h`?
 
-Nerd history. It's the old-school [PC BIOS system timer interrupt](http://www.delorie.com/djgpp/doc/rbinter/id/48/0.html). 
-An [Intel 8524](http://wiki.osdev.org/Programmable_Interval_Timer) programmable interval timer generated it ~18.2 times 
-per second (every ~55 milliseconds). The `int08h` handler was responsible for calling `int1Ch` which was the preferred 
-periodic interrupt for "well behaved" programs. 
+It's the old-school [PC BIOS system timer interrupt](http://www.delorie.com/djgpp/doc/rbinter/id/48/0.html). 
+`int` is short for "interrupt" and `08h` notates hex. Today one might write `int0x08` instead.
+An [Intel 852x](http://wiki.osdev.org/Programmable_Interval_Timer) programmable interval timer generated `int08h` 
+~18.2 times per second (every ~55 milliseconds). 
 
-Of course, not all programs were well behaved. Those that re-vectored `int08h` (or re-vectored any of the lower interrupts) 
-were typically quite *interesting*.
-
+"Well behaved" programs did not mess with `int08h`. Of course, not all programs (and programmers) were 
+well behaved, thus those tempting fate by patching `int08h` could be *quite* interesting.
 
 ## Okay, why `int08h` then?
 
