@@ -27,6 +27,10 @@ td, th {
   padding: 0.5rem 1.2rem;
 }
 
+th {
+  vertical-align: bottom;
+}
+
 a {
   color: #303F9F;
 }
@@ -42,11 +46,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1 { 
-  font-size: 2.1rem; 
+  font-size: 2.5rem; 
 }
 h2 { 
-  font-size: 1.9rem; 
-  margin-bottom: 0.5rem;
+  font-size: 2.0rem; 
+  margin-bottom: 0.75rem;
+  color: #455A64;
 }
 h3 { 
   font-size: 1.6rem; 
@@ -88,7 +93,12 @@ ul > li {
   list-style: disc inside;
   margin-bottom: 0;
   margin-top: 0.25rem;
-  margin-left: 1.0rem;
+  margin-left: 2.0rem;
+}
+
+ol > li {
+  margin-top: 0.25rem;
+  margin-left: 2.0rem;
 }
 
 .container {
@@ -161,6 +171,14 @@ ul > li {
   height: 2px;
   margin: 1rem 0;
   background: #E1E1E1;
+}
+
+.footnotes {
+  font-size: 90%;
+}
+
+.footnotes li {
+  margin-left: 0.5rem;
 }
 
 header .hr {
