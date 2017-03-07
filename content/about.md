@@ -41,5 +41,5 @@ Because the `.com` domain of my favorite PC interrupt, `int13h`, was already tak
 
 Generated using [Hugo](https://gohugo.io/). Theme derived from [Hugo-Zen](https://github.com/rakuishi/hugo-zen).
 Body typeface is [Merriweather](https://fonts.google.com/specimen/Merriweather) and headings are 
-[Merriweather Sans](https://fonts.google.com/specimen/Merriweather+Sans) with slightly tightened tracking. Monospace
+[Merriweather Sans](https://fonts.google.com/specimen/Merriweather+Sans). Monospace
 typeface is [Hack](http://sourcefoundry.org/hack/) with syntax highlighting by [`highlight.js`](https://highlightjs.org/).
