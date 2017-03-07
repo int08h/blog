@@ -13,14 +13,16 @@ pre > code {
 }
 
 blockquote {
-  font-style: italic;
   margin: 2rem 0;
   padding: 1.2rem 1rem 1.2rem 2rem;
   background: #ECEFF1;
   border-left: 8px solid #90A4AE;
 }
 blockquote > p {
-  margin: 0;
+  margin: 1rem 0;
+}
+blockquote ul, blockquote ol {
+  margin-bottom: inherit;
 }
 
 td, th {
@@ -42,11 +44,12 @@ a:hover {
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Merriweather Sans', sans-serif;
   font-weight: 400;
-  letter-spacing: -0.05rem;
+  letter-spacing: 0;
 }
 
 h1 { 
   font-size: 2.5rem; 
+  margin-bottom: 1rem;
 }
 h2 { 
   font-size: 2.0rem; 
@@ -90,15 +93,16 @@ main {
 }
 
 ul > li {
-  list-style: disc inside;
+  list-style: disc outside;
   margin-bottom: 0;
   margin-top: 0.25rem;
-  margin-left: 2.0rem;
+  margin-left: 4.0rem;
 }
 
 ol > li {
+  list-style: decimal outside;
   margin-top: 0.25rem;
-  margin-left: 2.0rem;
+  margin-left: 4.0rem;
 }
 
 .container {
@@ -178,7 +182,7 @@ ol > li {
 }
 
 .footnotes li {
-  margin-left: 0.5rem;
+  margin-left: 2.0rem;
 }
 
 header .hr {

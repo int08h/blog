@@ -7,7 +7,8 @@ hidefromhome = "true"
 
 # Introduction
 
-> In theory, there is no difference between practice and theory. In practice, there is.[^0]
+> *"In theory, there is no difference between practice and theory. In practice, there is."*     
+> -- Jan van de Snepscheut[^0]
 
 [^0]: http://www.snopes.com/quotes/berra/practicetheory.asp
 
@@ -36,6 +37,25 @@ As concurrent queues go this sounds like a winner, no?
 In practice DV-MPSC is a simple solution to a difficult problem space. Its simplicity makes it *easy to understand* and similarly *easy to debug*; invaluable properties for those working on concurrent systems. DV-MPSC "must be doing something right" as it's been adopted by mainstream concurrent applications including [Netty (via JCTools)](https://github.com/JCTools/JCTools/blob/master/jctools-core/src/main/java/org/jctools/queues/MpscLinkedQueue.java), [Akka](https://github.com/akka/akka/blob/master/akka-actor/src/main/java/akka/dispatch/AbstractNodeQueue.java) and [Rust](https://github.com/rust-lang/rust/blob/master/src/libstd/sync/mpsc/mpsc_queue.rs)[^3]. 
 
 [^3]: Akka and JCTools change the algorithm slightly to make it linearizable at the expense of a weaker progress condition in `pop`. This is to necessary to conform to the `java.lang.Queue` interface. Consult [this post](http://psy-lob-saw.blogspot.com/2015/04/porting-dvyukov-mpsc.html) to start down *that* rabbit-hole (it's a deep one).
+
+> ## Quick Terminology Review
+>
+> [Progress condition](http://doc.akka.io/docs/akka/current/general/terminology.html#Non-blocking_Guarantees__Progress_Conditions_)
+> terminology is prone to misuse. "*Lock-free*" is the common victim, usually employed not as a guarantee of overall system progress,
+> but incorrectly to mean "not using {locks, mutexes, critical sections}". 
+>
+> Terminology is used as outlined below; deadlock awaits misusers of `cmpxchg` and `pthread_mutex_lock` alike. 
+>
+> | Progress Condition |Definition   | Think of it as |
+> |---|---|---|
+> | *wait-free* |  All threads complete their call in a finite number of steps. The strongest guarantee of progress.| Everybody is working |
+> | *lock-free* |  At least *one* thread is always able to complete its call in a finite number of steps. Some threads may starve but overall system progress is guaranteed. | Somebody is working |
+> | *blocking*  |  Delay or error in one thread can prevent other threads from completing their call. Potentially all threads may starve and the system makes no progress.| Somebody is probably working unless bad things happen |
+> 
+> Additional terms: 
+>
+>   * **Thread** - An algorithm instance on a multiprocessor/multicore shared memory system. We assume multiple threads are able to execute simultaneously.
+>   * **Completes its call** - An invocation of `push` or `pop` that returns control to the caller thread.
 
 # Implementation
 
@@ -92,20 +112,6 @@ private:
   std::atomic<Node*> tail;
 };
 ```
-
-# Quick Terminology Review
-
-[Progress condition](http://doc.akka.io/docs/akka/current/general/terminology.html#Non-blocking_Guarantees__Progress_Conditions_)
-terminology is prone to misuse. "*Lock-free*" is the typical victim, usually employed to mean "not using locks/mutexes/critical sections" 
-and not as a guarantee of overall system progress. To be clear, deadlock awaits misusers of `cmpxchg` and `pthread_mutex_lock` alike. 
-
-| Progress Condition |Definition   | Think of it as |
-|---|---|---|
-| *wait-free* |  All threads complete their call in a finite number of steps. The strongest guarantee of progress.| Everybody is working |
-| *lock-free* |  At least *one* thread is always able to complete its call in a finite number of steps. Some threads may starve but overall system progress is guaranteed. | Somebody is working |
-| *blocking*  |  Delay or error in one thread can prevent other threads from completing their call. Potentially all threads may starve and the system makes no progress.| Somebody is probably working unless bad things happen |
-
-"*Thread*" is an algorithm instance on a multiprocessor/multicore shared memory system. The shared memory system is able to execute multiple threads simultaneously. "*Completes its call*" is an invocation of `push` or `pop` that returns control to the caller thread. 
 
 # Simplicity
 
