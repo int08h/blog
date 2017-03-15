@@ -112,14 +112,15 @@ As concurrent queues go this sounds like a winner, no?
 # Implementation Simplicity
 
 A cursory examination of the implementation makes it apparent that DV-MPSC is a linked list
-plus some atomic operations. This alone makes DV-MPSC more approachable than the many other 
-concurrent queue algorithms. Developers can lean on prior experience with linked lists to quickly
-grasp basics and save cognitive heavy-lifting for understand how the atomic operations work. 
+plus some atomic operations. Additionally:
 
-Beyond the similarity to a linked-list:
+* `push` and `pop` employ a minimal number of atomic operations.
+* No need to handle contented or partially-applied operations. 
+* No loops (`compare-and-swap` or `load-linked/store-conditional` loops).
 
-* `push` and `pop` employ atomic operations without looping (no `cas` or `ll/sc` loops)
-* There are no complications due to contented or partially-applied operations. 
+These qualities make DV-MPSC more approachable than the many other concurrent queue algorithms.  
+Developers can lean on prior experience with linked lists to quickly grasp basics and 
+save cognitive heavy-lifting for understand how the (straight-forward) atomic operations work. 
 
 # Progress 
 
@@ -152,8 +153,7 @@ value = nullptr
 [^5]: http://www.cs.yale.edu/homes/aspnes/pinewiki/WaitFreeHierarchy.html
 
 
-
-# Linearizability (Lack Of)
+# Partial order is sufficient
 
 Imagine there are two threads invoking `push` simultaneously:
 
@@ -164,12 +164,12 @@ Consumer            pop(?) pop(?)
 ---------- program order ------------>
 ```
 
-Later in program order the Consumer executes two sequential `pop` operations 
-and retreives `[a, b]`. Intuitively this makes sense. Additionally, since 
-the `push` operations were simultaneous (and we don't know which Producer "won" the race
-to enqueue an element first), we can also 
-intuitively accept that the two sequential `pop` operations could have produced
-`[b, a]`. 
+Later in program order the consumer executes two sequential `pop` operations 
+and retreives `[a, b]`. Intuitively this makes sense: the `push` operations were 
+simultaneous and we don't know which producer "won" the race
+to enqueue an element first. We can also accept that the two sequential `pop` 
+operations could have instead produced `[b, a]` without violating our intuition.
+(The empty result case is ignored in this example.)
 
 Now imagine three producers:
 
@@ -177,15 +177,25 @@ Now imagine three producers:
 Producer 1   push(a)         push(d)
 Producer 2           push(c)
 Producer 3   push(b)
-Consumer                           pop(?)
----------- program order ------------>
+Consumer                             pop(?)
+------------ program order -------------->
 ```
 
-What value will `pop` have? It could be `a`, `b`, or `c` but *not* `d`.
+What value will `pop` have? Ignoring the empty case, `pop` could return 
+`a`, `b`, or `c` but *not* `d`. In fact, all the lists below are valid orderings of 
+values returned by sequential `pop` operations (non-exhaustive):
 
-# Ordering
+```text
+[a, b, c, d]   
+[b, c, a, d]   
+[b, a, c, d]   
+[c, a, d, b]   
+[a, b, d, c]
+```
 
-Partial order is enough, FIFO for each producer
+DV-MPSC ensures that individual producers are FIFO--there is no valid history where
+`d` is read before `a`--but provides no ordering *between* producers. A bit unintuitive
+at first, but this partial ordering is sufficient to implement the Actor Model.
 
 # Closing Thoughts
 
