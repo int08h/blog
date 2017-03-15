@@ -15,7 +15,7 @@ PGP key at [keybase.io/sstock](https://keybase.io/sstock) if required.
 
 ## License and Disclaimer
 
-All content on `int08h` is Copyright (c) 2017 int08h LLC and licensed under the Creative Commons 
+All content on `int08h` is copyright (c) 2017 int08h LLC and licensed under the Creative Commons 
 [Attribution-ShareAlike 4.0 License](https://creativecommons.org/licenses/by-sa/4.0/legalcode). 
 
 
