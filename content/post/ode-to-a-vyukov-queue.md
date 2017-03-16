@@ -11,17 +11,17 @@ This post celebrates an instance of simplicity in action: [Dmitry Vyukov](https:
 
 [^1]: Dmitry's site [1024cores.net](http://www.1024cores.net) accumulates years of his insight into synchronization algorithms, multicore/multiprocessor development, and systems programming. If nothing else, visit his [queue taxonomy](http://www.1024cores.net/home/lock-free-algorithms/queues) and stand humbled knowing Dmitry has probably **forgotten** more about each dimension in that design space that most people presently know. As of this writing Dmitry is at Google where he's working on all manner of [wicked](https://github.com/google/syzkaller)-[cool](https://www.linuxplumbersconf.org/2016/ocw//system/presentations/3471/original/Sanitizers.pdf) [dynamic](https://github.com/dvyukov/go-fuzz) testing tools. 
 
-DV-MPSC is one of those rare solutions that addresses **essential complexity** and no more. The result is something *easy to understand* and *easy to implement*. Such clarity is uncommon in the concurrent algorithm space and has no doubt contributed to adoption of DV-MPSC in mainstream concurrent systems like [Netty (via JCTools)](https://github.com/JCTools/JCTools/blob/master/jctools-core/src/main/java/org/jctools/queues/MpscLinkedQueue.java), [Akka](https://github.com/akka/akka/blob/master/akka-actor/src/main/java/akka/dispatch/AbstractNodeQueue.java) and [Rust](https://github.com/rust-lang/rust/blob/master/src/libstd/sync/mpsc/mpsc_queue.rs)[^3]. 
+DV-MPSC is one of those rare solutions that addresses [essential complexity](http://worrydream.com/refs/Brooks-NoSilverBullet.pdf) and no more. The result is something *easy to understand* and *easy to implement*. Such clarity is uncommon in the concurrent algorithm space and has no doubt contributed to adoption of DV-MPSC in mainstream concurrent systems like [Netty (via JCTools)](https://github.com/JCTools/JCTools/blob/master/jctools-core/src/main/java/org/jctools/queues/MpscLinkedQueue.java), [Akka](https://github.com/akka/akka/blob/master/akka-actor/src/main/java/akka/dispatch/AbstractNodeQueue.java) and [Rust](https://github.com/rust-lang/rust/blob/master/src/libstd/sync/mpsc/mpsc_queue.rs)[^3]. 
 
 [^3]: Akka and JCTools change the algorithm slightly to make it linearizable at the expense of a weaker progress condition in `pop`. This is to necessary to conform to the `java.lang.Queue` interface. Consult [this post](http://psy-lob-saw.blogspot.com/2015/04/porting-dvyukov-mpsc.html) to start down *that* rabbit-hole (beware it's a deep one).
 
-Such elegance is not without tradeoffs. We'll investigate the compromises and their implications below.
+Such elegance requires tradeoffs. We'll investigate the compromises and their implications below.
 
 > ## Terminology Review
 >
-> This post dicusses the [progress condition](http://doc.akka.io/docs/akka/current/general/terminology.html#Non-blocking_Guarantees__Progress_Conditions_) properties of DV-MPSC. To get all readers on the same page, terms herein are used as follows:
+> A quick review of imporant terms before diving into the details.
 >
-> | Progress Condition |Definition   | Think of it as |
+> | Progress Condition[^7] |Definition   | Think of it as |
 > |---|---|---|
 > | *wait-free* |  All threads complete their call in a finite number of steps. The strongest guarantee of progress.| Everybody is working |
 > | *lock-free* |  At least *one* thread is always able to complete its call in a finite number of steps. Some threads may starve but overall system progress is guaranteed. | Somebody is working |
@@ -32,10 +32,12 @@ Such elegance is not without tradeoffs. We'll investigate the compromises and th
 >   * **Thread** - An algorithm instance on a multiprocessor/multicore shared memory system. We assume multiple threads are able to execute simultaneously.
 >   * **Completes its call** - An invocation of the `push` or `pop` method that returns control to the caller thread.
 
+[^7]: More deails on [progress conditions](http://doc.akka.io/docs/akka/current/general/terminology.html#Non-blocking_Guarantees__Progress_Conditions_)  
+
 # Algorithm Properties
 
 Looking at DV-MPSC from an academic computer-science standpoint one might be a tad disappointed: DV-MPSC lacks 
-properties typically associated with concurrent algorithms:
+properties typically associated with robust concurrent algorithms:
 
 1. Overall it's a **blocking** algorithm. No *{wait,lock,obstruction}-freedom* here.
 2. The algorithm is not *sequentially consistent* nor *linearizable*, only **serializable**[^2]. 
@@ -49,7 +51,7 @@ Put another way, on paper DV-MPSC:
 
 But all is not lost...read on.
 
-# Examining the Implementation 
+# Examining an Implementation 
 
 ```c++
 /*
@@ -101,7 +103,7 @@ variant[^4])
 
 [^4]: The version here differs from 1024cores in that elements are enqueued at the *tail* and removed from the *head*. The 1024cores implementation uses 'head' and 'tail' in the reverse manner. Additionally, performance sensitive applications would likely use the [intrusive](http://www.1024cores.net/home/lock-free-algorithms/queues/intrusive-mpsc-node-based-queue) version, but the non-intrusive version is easier to explain.
 
-DV-MPSC boils down to linked list + atomic operations. Additionally:
+DV-MPSC boils down to a linked list + atomic operations. Additionally:
 
 * `push` and `pop` employ a minimal number of atomic operations.
 * There are no special cases to handle contended or partially-applied operations. 
@@ -129,7 +131,8 @@ The window of vulnerability for this is quite small, one instruction on x86_64, 
 a concern nonetheless. Let's examine `push` in more detail and see what is going on:
 
 ## How the queue becomes blocking 
-Recall how `push` is implemented:
+
+Annotating `push`:
 
 ```c++
  void push(Node* node) {
@@ -175,8 +178,10 @@ Queue:
  tail -> b
 
 List contents:
- stub           a                    b
- next -> a      next -> nullptr      next -> nullptr
+ stub           a                |   b
+ next -> a      next -> nullptr  |   next -> nullptr
+                                 |   
+      linked list is broken here ^
 ```
 
 Uh-oh, the queue is inconsistent: 
@@ -184,8 +189,23 @@ Uh-oh, the queue is inconsistent:
 * `tail` points to `b`; however 
 * `b` is unreachable starting from `head`
 
-Additional calls to `push` will add more unreachable nodes to the list.
-Calls to `pop` will return `a` and then subsequently `nullptr` as if the list were empty.
+What happens next? Additional calls to `push` will add more unreachable nodes to the list.
+If `push(c)` were invoked the queue would look like this:
+
+```text
+Queue:
+ head -> stub 
+ tail -> c
+
+List contents:
+ stub           a                |   b              c
+ next -> a      next -> nullptr  |   next -> c      next -> nullptr
+                                 |
+      linked list is broken here ^
+```
+
+And what about `pop()`? The first `pop` call will return `a`. However subsequent `pop` calls will
+return `nullptr` as if the list were empty.
 
 Revisiting the above definition of *blocking*:
 
@@ -198,7 +218,9 @@ in a finite number of steps however the system **overall** fails to make progres
 
 ## How bad is it really?
 
-Not so bad. Vulnerability is one instruction long. In user-mode code how would one get there? 
+For this to occur in practice the enqueing thread must halt precisely after exchanging 
+`tail` but before storing the new value of `next`. On x86_64 the window of vulnerability is 
+one instructions long. In user-mode code how would one get there? 
 
 # Serializable ain't so bad
 
