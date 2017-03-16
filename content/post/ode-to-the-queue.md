@@ -1,5 +1,5 @@
 +++
-date = "2017-03-01T13:19:09-06:00"
+date = "2017-03-15T13:19:09-06:00"
 title = "Ode to Dmitry Vyukov's MPSC Queue"
 hidefromhome = "true"
 
@@ -10,21 +10,21 @@ hidefromhome = "true"
 > **parsimonious** (adjective)  
 > *Using a minimal number of assumptions, steps, or conjectures.*
 
-[^0]: http://www.snopes.com/quotes/berra/practicetheory.asp
-
 This post examines an instance of simplicity in action: [Dmitry Vyukov](https://twitter.com/dvyukov)'s[^1] Multi-Producer Single-Consumer (DV-MPSC) queue. 
 
 [^1]: Dmitry's site [1024cores.net](http://www.1024cores.net) accumulates years of his insight into synchronization algorithms, multicore/multiprocessor development, and systems programming. If nothing else, visit his [queue taxonomy](http://www.1024cores.net/home/lock-free-algorithms/queues) and stand humbled knowing Dmitry has probably **forgotten** more about each dimension in that design space that most people presently know. As of this writing Dmitry is at Google where he's working on all manner of [wicked](https://github.com/google/syzkaller)-[cool](https://www.linuxplumbersconf.org/2016/ocw//system/presentations/3471/original/Sanitizers.pdf) [dynamic](https://github.com/dvyukov/go-fuzz) testing tools. 
 
-Attacking one aspect of the more general producer-consumer problem, DV-MPSC addresses the **essential complexity** at hand and no more. 
-DV-MPSC's simplicity makes it *easy to understand* and *easy to implement*. Conceptual and implementation simplicity are uncommon properties in this space and no doubt have contributed to adoption of DV-MPSC in mainstream concurrent systems like [Netty (via JCTools)](https://github.com/JCTools/JCTools/blob/master/jctools-core/src/main/java/org/jctools/queues/MpscLinkedQueue.java), [Akka](https://github.com/akka/akka/blob/master/akka-actor/src/main/java/akka/dispatch/AbstractNodeQueue.java) and [Rust](https://github.com/rust-lang/rust/blob/master/src/libstd/sync/mpsc/mpsc_queue.rs)[^3]. 
+Using Brooks' terminology, DV-MPSC addresses **essential complexity** and no more. 
+Its simplicity makes it *easy to understand* and *easy to implement*. Such clarity is an uncommon property in the concurrent algorithm space and has no doubt contributed to adoption of DV-MPSC in mainstream concurrent systems like [Netty (via JCTools)](https://github.com/JCTools/JCTools/blob/master/jctools-core/src/main/java/org/jctools/queues/MpscLinkedQueue.java), [Akka](https://github.com/akka/akka/blob/master/akka-actor/src/main/java/akka/dispatch/AbstractNodeQueue.java) and [Rust](https://github.com/rust-lang/rust/blob/master/src/libstd/sync/mpsc/mpsc_queue.rs)[^3]. 
 
 [^3]: Akka and JCTools change the algorithm slightly to make it linearizable at the expense of a weaker progress condition in `pop`. This is to necessary to conform to the `java.lang.Queue` interface. Consult [this post](http://psy-lob-saw.blogspot.com/2015/04/porting-dvyukov-mpsc.html) to start down *that* rabbit-hole (beware it's a deep one).
+
+Such elegance is not without tradeoffs and we'll investigate 
 
 > ## Quick Terminology Review
 >
 > This post uses concurrent [progress condition](http://doc.akka.io/docs/akka/current/general/terminology.html#Non-blocking_Guarantees__Progress_Conditions_)
-> terminology to describe properties of DV-MPSC. Such terminology is prone to misuse and can be confusing. Terms herein are used as follows:
+> terminology to describe certain properties of DV-MPSC. To get all readers on the same page, terms herein are used as follows:
 >
 > | Progress Condition |Definition   | Think of it as |
 > |---|---|---|
@@ -39,7 +39,7 @@ DV-MPSC's simplicity makes it *easy to understand* and *easy to implement*. Conc
 
 # Algorithm Properties
 
-Looking at DV-MPSC from an academic computer-science standpoint one might walk away disappointed as DV-MPSC lacks 
+Looking at DV-MPSC from an academic computer-science standpoint one might be a tad disappointed: DV-MPSC lacks 
 properties typically associated with "useful" concurrent algorithms:
 
 1. Overall it's a **blocking** algorithm. No *{wait,lock,obstruction}-freedom* here.
@@ -52,24 +52,16 @@ To say it another way, on paper DV-MPSC:
 1. Makes no guarantee that any work is going to get done, and
 2. Work that is lucky enough to get done has no overall deterministic ordering.
 
-That's not a confidence inspiring list and one might stop reading here. But stick with it,
-things get interesting.
+Not a confidence inspiring list. One might be forgiven for questioning my judgment in 
+praising such a flawed algorithm. But stick with it, things get interesting!
 
 # Examining the Implementation 
-
-Below is a C++ implementation of the
-[non-intrusive](http://www.1024cores.net/home/lock-free-algorithms/queues/non-intrusive-mpsc-node-based-queue) 
-variant[^4]. Performance sensitive applications would likely use the 
-[intrusive](http://www.1024cores.net/home/lock-free-algorithms/queues/intrusive-mpsc-node-based-queue)
-version, but the non-intrusive version is easier to explain.
-
-[^4]: The version here differs from 1024cores in that elements are enqueued at the *tail* and removed from the *head*. The 1024cores implementation uses 'head' and 'tail' in the reverse manner (as does most of Dmitry's code).
 
 ```c++
 /*
  * Minimal C++ implementation of the non-intrusive Vyukov MPSC queue. 
  * Illustrates the spirit of the algorithm while being accessible 
- * to most readers. Not production code.
+ * to most readers.
  *
  * Nodes are enqueued at the *tail* and removed from the *head*.
  */
@@ -109,50 +101,65 @@ private:
 };
 ```
 
-A cursory examination makes it apparent that DV-MPSC is a linked list plus some atomic operations. 
+This is the
+[non-intrusive](http://www.1024cores.net/home/lock-free-algorithms/queues/non-intrusive-mpsc-node-based-queue) 
+variant[^4]. Performance sensitive applications would likely use the 
+[intrusive](http://www.1024cores.net/home/lock-free-algorithms/queues/intrusive-mpsc-node-based-queue)
+version, but the non-intrusive version is easier to explain.
+
+[^4]: The version here differs from 1024cores in that elements are enqueued at the *tail* and removed from the *head*. The 1024cores implementation uses 'head' and 'tail' in the reverse manner (as does most of Dmitry's code).
+
+A quick examination makes it apparent that DV-MPSC is a linked list plus some atomic operations. 
 Additionally:
 
+
 * `push` and `pop` employ a minimal number of ordered (non-relaxed) atomic operations.
-* There are no special cases for contented or partially-applied operations. 
-* Also no `compare-and-swap` or `load-linked/store-conditional` loops.
+* There are no special cases to handle contented or partially-applied operations. 
+* Also no compare-and-swap loops or retries.
 
-These qualities make DV-MPSC more approachable than many other concurrent queue algorithms.  
-Developers can lean on prior experience with linked lists to quickly grasp basics and 
-save cognitive heavy-lifting for understand how the (uncomplicated) atomic operations work. 
+These qualities make DV-MPSC more approachable than many other concurrent queue algorithms
+(compare to the familiar [M&S queue](https://www.cs.rochester.edu/research/synchronization/pseudocode/queues.html) 
+which has loops and needs at least two compare-and-swaps to enqueue a node). Developers can lean on 
+prior experience with linked lists to quickly grasp basics and save cognitive 
+heavy-lifting for understand how the (uncomplicated) atomic operations work.
+Such simplicity also makes it feasible to inspect compiler output for correctness, something
+that is necessary from time-to-time.
 
-# Non-Quite Wait-Free, But Rarely Blocking
+# Block me, maybe?
 
-*Most* of the time, DV-MPSC will behave as if it's *wait-free*. Recall that both
+Most of the time DV-MPSC operates *wait-free*. Recall that both
 `push` and `pop` have no loops or special cases; they execute straight-through every time.
-This is simply awesome as we can sleep easy knowing our producers and consumers can always complete their
-calls in a finite number of steps; we don't need to worry about them being delayed by other threads. 
+We can sleep easy knowing that our consumer and any number of producers always complete their
+calls in a finite number of steps.
 
 However there is a worst-case lurking in `push` that knocks DV-MPSC into the *blocking* category.
-Let's examine `push` in more detail and see why this is--and why it likely doesn't matter 
-in most use cases.
+The window of vulnerability for this is quite small, one instruction on x86_64, but it's
+a concern nonetheless. Let's examine `push` in more detail and see what is going on:
 
 ```c++
  void push(Node* node) {
    node->next.store(nullptr, memory_order_relaxed);
  
-   Node* prev = tail.exchange(node, memory_order_acq_rel);  // (#1) Serialize producers
-                                                            // (#2) DANGER ZONE 
-   prev->next.store(node, memory_order_release);            // (#3) Serialize consumer
+   Node* prev = tail.exchange(node, memory_order_acq_rel);  // #1 Serialize producers
+                                                            // #2 DANGER ZONE 
+   prev->next.store(node, memory_order_release);            // #3 Serialize consumer
  }
 
  Node* pop() {
    Node* head_copy = head.load(memory_order_relaxed);
-   Node* next = head_copy->next.load(memory_order_acquire); // (#4) rel/acq with #3
+   Node* next = head_copy->next.load(memory_order_acquire); // #4 rel/acq with #3
    ...
  }
 ```
 
-The queue starts in this state:
+A new queue starts in this state:
 
 ```text
-head* -> stub 
-tail* -> stub
+Queue:
+ head* -> stub 
+ tail* -> stub
 
+List contents:
  stub
  next* -> nullptr
 ```
@@ -160,34 +167,46 @@ tail* -> stub
 A producer thread executes `push(a)` and the queue now looks like this:
 
 ```text
-head* -> stub 
-tail* -> node-a
+Queue:
+ head* -> stub 
+ tail* -> a
 
- stub                 node-a  
- next* -> node-a      next* -> nullptr
+List contents:
+ stub            a  
+ next* -> a      next* -> nullptr
 ```
 
-Next a producer thread begins to execute `push(b)` completeing `tail.exchange(...)` (`#1`) 
-but **not** `next.store(...)` (`#3`). The producer thread ceased execution (preempted 
-by the operating system, paused for garbage collection, etc) exactly at the 
-DANGER ZONE (`#2`). The queue is left like this:
+Now a producer begins to execute `push(b)` completing `#1` 
+but stopping **before** `#3`. The producer thread has ceased execution (preempted 
+by the operating system, paused for garbage collection, etc) exactly at
+`#2` leaving the queue in this state:
 
 ```text
-head* -> stub 
-tail* -> node-b
+Queue:
+ head* -> stub 
+ tail* -> b
 
- stub                 node-a                node-b
- next* -> node-a      next* -> nullptr      next* -> nullptr
+List contents:
+ stub            a                     b
+ next* -> a      next* -> nullptr      next* -> nullptr
 ```
+
+Uh-oh, the queue is inconsistent: 
+
+* `tail` points to `b`; however 
+* `b` is unreachable starting from `head`
+
+Additional calls to `push` will add more unreachable nodes to the list. And
+calls to `pop` will return `a` and then subsequently `nullptr` as if the list were empty.
 
 Revisiting the above definition of *blocking*:
 
 > ...[p]otentially all threads may starve and the system makes no progress.
 
-And we see why DV-MPSC taken as a whole is *blocking*: if the rare condition is 
+And we see why DV-MPSC taken as a whole is *blocking*: if this rare condition is 
 encountered the algorithm will never deliver elements to the consumer again.
-Even in the broken state, individual calls to `push` and `pop` will execute 
-in a finite number of steps, however the system overall fails to make progress.
+Even in this broken state individual calls to `push` and `pop` will execute 
+in a finite number of steps however the system **overall** fails to make progress.
 
 # Partial order is sufficient
 
