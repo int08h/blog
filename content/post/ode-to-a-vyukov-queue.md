@@ -7,7 +7,7 @@ hidefromhome = "false"
 
 # Introduction
 
-This post celebrates an instance of simplicity in action: [Dmitry Vyukov](https://twitter.com/dvyukov)'s[^1] Multi-Producer Single-Consumer queue (DV-MPSC) . 
+This post celebrates an instance of simplicity in action: [Dmitry Vyukov](https://twitter.com/dvyukov)'s[^1] Multi-Producer Single-Consumer queue (DV-MPSC). 
 
 [^1]: Dmitry's site [1024cores.net](http://www.1024cores.net) accumulates years of his insight into synchronization algorithms, multicore/multiprocessor development, and systems programming. If nothing else, visit his [queue taxonomy](http://www.1024cores.net/home/lock-free-algorithms/queues) and stand humbled knowing Dmitry has probably **forgotten** more about each dimension in that design space that most people presently know. As of this writing Dmitry is at Google where he's working on all manner of [wicked](https://github.com/google/syzkaller)-[cool](https://www.linuxplumbersconf.org/2016/ocw//system/presentations/3471/original/Sanitizers.pdf) [dynamic](https://github.com/dvyukov/go-fuzz) testing tools. 
 
@@ -15,7 +15,7 @@ DV-MPSC is one of those rare solutions that addresses **essential complexity** a
 
 [^3]: Akka and JCTools change the algorithm slightly to make it linearizable at the expense of a weaker progress condition in `pop`. This is to necessary to conform to the `java.lang.Queue` interface. Consult [this post](http://psy-lob-saw.blogspot.com/2015/04/porting-dvyukov-mpsc.html) to start down *that* rabbit-hole (beware it's a deep one).
 
-Such elegance is not without tradeoffs. We'll investigate the compromises and their implications below.
+Such elegance is not without tradeoffs. We'll investigate two commonly discussed shortcomings below--a blocking progress guarantee and serializable consistency--and review their real-world impact. 
 
 > ## Terminology Review
 >
@@ -111,9 +111,7 @@ These qualities make DV-MPSC more approachable than many other concurrent queue 
 (compare to the familiar [M&S queue](https://www.cs.rochester.edu/research/synchronization/pseudocode/queues.html) 
 which has loops and needs at least two compare-and-swaps to enqueue a node[^6]). Developers can lean on 
 prior experience with linked lists to quickly grasp basics and save cognitive 
-heavy-lifting for understand how the (uncomplicated) atomic operations work.
-Such simplicity also makes it feasible to inspect compiler output for correctness, something
-that is necessary from time-to-time.
+heavy-lifting for understand how the atomic operations and corresponding memory orderings work.
 
 [^6]: I fully acknowledge that the M&S queue addresses the more challenging MPMC case. I highlight due to it being frequently encountered as an exemplar of concurrent queues in general. 
 
@@ -121,8 +119,6 @@ that is necessary from time-to-time.
 
 Generally DV-MPSC operations are *wait-free*. Recall that both
 `push` and `pop` have no loops or special cases; they execute straight-through every time.
-We can sleep easy knowing that our consumer and any number of producers always complete their
-calls in a finite number of steps.
 
 However there is a corner-case lurking in `push` that knocks DV-MPSC into the *blocking* category.
 The window of vulnerability for this is quite small, one instruction on x86_64, but it's
