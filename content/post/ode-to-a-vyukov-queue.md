@@ -1,11 +1,13 @@
 +++
-date = "2017-03-15T13:19:09-06:00"
+date = "2017-03-16T13:19:09-06:00"
 title = "Ode to a Vyukov Queue"
 hidefromhome = "false"
 
 +++
 
 # Introduction
+
+\[*Addendum: great comments about this post [on Reddit](https://www.reddit.com/r/programming/comments/5zuzzn/ode_to_a_vyukov_queue/)*\]
 
 This post celebrates an instance of simplicity in action: [Dmitry Vyukov](https://twitter.com/dvyukov)'s[^1] Multi-Producer Single-Consumer queue (DV-MPSC). 
 
@@ -51,7 +53,7 @@ Put another way, on paper DV-MPSC:
 
 But all is not lost...read on.
 
-# Examining an Implementation 
+# Implementation 
 
 ```c++
 /*
@@ -263,17 +265,15 @@ This is serializable ordering in action: *individual producers* are FIFO--there 
 `d` is read before `a`--but no ordering *between* producers exists nor does the ordering need to be consistent with program order.
 
 ## Impact
-The potential orderings admitted by serializability is unintuitive to humans, but per-producer FIFO partial ordering is sufficient to implement 
-powerful concurrent systems such as the actor model! So aside from bending your brain a bit it doesn't get in the way of utility. 
+The potential orderings admitted by serializability may be unintuitive to humans, but per-producer FIFO partial ordering is sufficient to implement 
+powerful concurrent systems such as the actor model. So aside from bending your brain a bit it doesn't get in the way of utility. 
 
 # Closing Thoughts
 
 This was a quick take on DV-MPSC and two of the tradeoffs involved in its design.
-
 Up for learning more? The footnotes will get you started and you can also take a look at what 
 [others](http://concurrencyfreaks.blogspot.com/2014/04/multi-producer-single-consumer-queue.html)
 [have](http://psy-lob-saw.blogspot.com/2015/04/porting-dvyukov-mpsc.html) 
 [written](https://blogs.oracle.com/dave/entry/ptlqueue_a_scalable_bounded_capacity) 
 about DV-MPSC.
-
 
