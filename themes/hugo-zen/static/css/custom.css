@@ -124,8 +124,8 @@ ol > li {
 .site-title {
   margin-top: 0;
   margin-bottom: 1rem;
-  font-family: Hack, monospace;
-  font-size: 3rem;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 3.0rem;
   line-height: 1rem;
 }
 .site-title a {
