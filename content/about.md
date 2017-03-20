@@ -1,5 +1,5 @@
 +++
-date = "2017-03-01"
+date = "2017-03-20"
 title = "About int08h"
 description = ""
 hidefromhome = "true"
@@ -33,13 +33,14 @@ An [Intel 852x](http://wiki.osdev.org/Programmable_Interval_Timer) programmable 
 "Well behaved" programs did not mess with `int08h`. Of course, not all programs (and programmers) were 
 well behaved, thus those tempting fate by patching `int08h` could be *quite* interesting.
 
-## Okay, why `int08h` then?
+## Okay, why `08` then?
 
 Because the `.com` domain of my favorite PC interrupt, `int13h`, was already taken. Sadface.
 
 ## Colophon
 
 Generated using [Hugo](https://gohugo.io/). Theme derived from [Hugo-Zen](https://github.com/rakuishi/hugo-zen).
-Body typeface is [Merriweather](https://fonts.google.com/specimen/Merriweather) and headings are 
-[Merriweather Sans](https://fonts.google.com/specimen/Merriweather+Sans). Monospace
-typeface is [Hack](http://sourcefoundry.org/hack/) with syntax highlighting by [`highlight.js`](https://highlightjs.org/).
+Body typeface is [Merriweather](https://fonts.google.com/specimen/Merriweather).
+Titles and headings use Matthew Butterick's [Concourse](http://concoursefont.com/) in C3 and T3 styles.
+Display monospace is [Share Tech Mono](https://fonts.google.com/specimen/Share+Tech+Mono) and code monospace
+is [Hack](http://sourcefoundry.org/hack/) with syntax highlighting by [`highlight.js`](https://highlightjs.org/).
