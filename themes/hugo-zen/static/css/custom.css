@@ -14,6 +14,30 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'M+ 1MN';
+  src: url('/font/mplus-1mn-light.woff2') format('woff2'),
+       url('/font/mplus-1mn-light.woff') format('woff');
+  font-weight: 200;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'M+ 1M';
+  src: url('/font/mplus-1m-regular.woff2') format('woff2'),
+       url('/font/mplus-1m-regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'M+ 1M';
+  src: url('/font/mplus-1m-light.woff2') format('woff2'),
+       url('/font/mplus-1m-light.woff') format('woff');
+  font-weight: 200;
+  font-style: normal;
+}
+
 body {
   font-family: 'Merriweather', serif;
   font-weight: 400;
@@ -21,11 +45,17 @@ body {
 }
 
 pre, code {
-  font-family: Hack, monospace;
+  font-family: "M+ 1M", monospace;
+  font-weight: 400;
+  font-size: 100%;
 }
 
 pre > code {
   line-height: 1.5;
+}
+
+code {
+  padding: 0 0.5rem;
 }
 
 blockquote {
@@ -136,7 +166,8 @@ ol > li {
 .site-title {
   margin-top: 0;
   margin-bottom: 1rem;
-  font-family: 'Share Tech Mono', monospace;
+  font-family: 'M+ 1MN', monospace;
+  font-weight: 200;
   font-size: 3.0rem;
   line-height: 1rem;
 }
@@ -178,9 +209,10 @@ ol > li {
 .entry-meta {
   display: inline-block;
   margin-bottom: 2rem;
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   color: #888;
-  font-family: "Share Tech Mono";
+  font-family: "M+ 1M";
+  font-weight: 400;
 }
 
 .footer-link {
