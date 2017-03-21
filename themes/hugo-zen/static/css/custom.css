@@ -32,6 +32,14 @@
 
 @font-face {
   font-family: 'M+ 1M';
+  src: url('/font/mplus-1m-bold.woff2') format('woff2'),
+       url('/font/mplus-1m-bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'M+ 1M';
   src: url('/font/mplus-1m-light.woff2') format('woff2'),
        url('/font/mplus-1m-light.woff') format('woff');
   font-weight: 200;
@@ -120,9 +128,9 @@ img {
 }
 
 header, footer {
-  font-family: 'Concourse C3', sans-serif;
   margin: 4rem 0;
   text-align: left;
+  font-family: 'Concourse C3', sans-serif;
 }
 
 footer {

@@ -228,7 +228,7 @@ Imagine two threads invoking `push` simultaneously:
 Producer 1  push(a)
 Producer 2  push(b)
 Consumer            pop(?) pop(?)
----------- program order ------------>
+------------ program order -------------->
 ```
 
 Later in program order the consumer executes two sequential `pop` operations 
@@ -243,10 +243,10 @@ operations could have instead produced `[b, a]` without violating our intuition
 Now imagine three producers:
 
 ```text
-Producer 1   push(a)         push(d)
-Producer 2           push(c)
-Producer 3   push(b)
-Consumer                             pop(?)
+Producer 1  push(a)         push(d)
+Producer 2          push(c)
+Producer 3  push(b)
+Consumer                            pop(?)
 ------------ program order -------------->
 ```
 
