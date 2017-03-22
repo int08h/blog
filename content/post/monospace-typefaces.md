@@ -1,5 +1,5 @@
 +++
-title = "Monospace Typefaces: the odds are good, but the goods are odd"
+title = "An Unreasonably Detailed Look at Monospace Typefaces"
 date = "2017-03-21T11:34:37-05:00"
 hidefromhome = "true"
 
@@ -13,10 +13,9 @@ monospace vs. proportional; ligatures vs not; bitmapped vs vector.
 In choosing a typeface to display code on this site, my minimum requirements were:
 
 * Monospaced
-* Supports *Basic Latin* plus *General Punctuation* Unicode at minimum
-* Disambiguated similar glyphs like `il17` and `oO0`
+* Humanist influenced
+* Disambiguates similar glyphs like `il1` and `oO0`
 * Regular (book) and bold weights with an italic for each
-* TrueType hints for on-screen display
 * Flawless `woff` and `woff2` versions
 
 Extensive unicode support and/or ligatures are not only unecessary, but undesireable as they
@@ -42,16 +41,16 @@ reinforced my appreciation of the craft. Take a look at the thought Monoid's aut
 I encountered several great typefaces that lacked one or more of the requirements and 
 therefore did not make the cut:
 
-| Name | Disambiguated | Book+Bold | Italics | Hinted | woff{2} | 
-|---|---|---|---|---|---|---|
-| Fira Mono + derivatives | Yes | Yes | No | Yes | Yes |
-| M+ Family | Yes | Yes | No | Yes | No[^2] |
-| Share Tech Mono | Yes | No | No | Yes | Yes | 
-| TheSans Mono | No[^3] | Yes | Yes | Yes | Yes |
+| Name | Disambiguated | Book+Bold | Italics |  woff{2} | 
+|---|---|---|---|---|---|
+| Fira Mono + derivatives | Yes | Yes | No |  Yes |
+| M+ Family | Yes | Yes | No |  No[^2] |
+| Share Tech Mono | Yes | No | No |  Yes | 
+| TheSans Mono | No[^3] | Yes | Yes |  Yes |
 
-[^2]: The `woff` version offered on the M+ site does not render all whitespace correctly. Taking the `ttf` versions and converting to `woff` via FontSquirrel produces correct versions of 1M and 1MN but 2M still renders incorrectly. 
+[^2]: The `woff` version offered on the M+ site does not render all whitespace correctly. Taking the `ttf` versions and converting to `woff` via FontSquirrel ("Fix missing ..." features enabled) produces correct versions of 1M and 1MN but 2M still renders incorrectly. 
 
-[^3]: Zero is not slashed nor dotted. It may be accessible via OpenType alternate form, but I didn't see it.
+[^3]: Zero is not slashed nor dotted. It may be accessible via an OpenType alternate form, but I didn't see it.
 
 # Typefaces of Note
 

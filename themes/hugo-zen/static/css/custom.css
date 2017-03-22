@@ -1,16 +1,32 @@
 @font-face {
   font-family: 'Concourse T3';
-  src: url('/font/Concourse_T3_Tab_Regular.woff2') format('woff2'),
-       url('/font/Concourse_T3_Tab_Regular.woff') format('woff');
+  src: url('/font/concourse_t3_regular.woff2') format('woff2'),
+       url('/font/concourse_t3_regular.woff') format('woff');
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
+  font-family: 'Concourse T4';
+  src: url('/font/concourse_t4_regular.woff2') format('woff2'),
+       url('/font/concourse_t4_regular.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
   font-family: 'Concourse C3';
-  src: url('/font/Concourse_C3_Tab_Regular.woff2') format('woff2'),
-       url('/font/Concourse_C3_Tab_Regular.woff') format('woff');
+  src: url('/font/concourse_c3_regular.woff2') format('woff2'),
+       url('/font/concourse_c3_regular.woff') format('woff');
   font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Concourse C4';
+  src: url('/font/concourse_c4_regular.woff2') format('woff2'),
+       url('/font/concourse_c4_regular.woff') format('woff');
+  font-weight: 500;
   font-style: normal;
 }
 
@@ -201,8 +217,7 @@ ol > li {
 }
 
 .entry-title {
-  font-family: 'Concourse C3';
-  text-transform: uppercase;
+  font-family: 'Concourse T4';
   margin-bottom: 0;
 }
 
