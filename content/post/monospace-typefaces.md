@@ -7,16 +7,18 @@ hidefromhome = "true"
 
 I needed to choose a typeface to display code on this site. That task morphed into this post.
 
+# Pick Your Poison
+
 Every programmer at some point chooses a typeface for coding. Perhaps you
 are satisfied with your editor's defaults (I envy you). Maybe you are 
 a typophile or perfectionist. Good luck if so: coding typefaces proliferate like 
 programming languages. And no programming-related domain is complete without endless 
-arguments over implementation details: monospace vs. proportional; ligatures vs not; bitmapped vs vector.
+arguments over implementation details: monospace vs. proportional; ligatures vs. not; bitmapped vs. vector.
 
 My desiderata in choosing a typeface to display code on this site:
 
 * Monospaced
-* Narrower width 
+* Narrower width than typical
 * Disambiguates similar glyphs such as `il1` and `oO0`
 * Regular (book) and bold weights with an italic for each
 * Flawless `woff` and `woff2` versions
@@ -27,7 +29,7 @@ on screen which is especially beneficial on tablets and phones.
 
 # Candidates
 
-A number of commercial and free typefaces fit the bill (alphabetical order):
+Filtering on the above criteria, a number of commercial and free typefaces fit the bill (alphabetical order):
 
 * [Anonymous Pro](http://www.marksimonson.com/fonts/view/anonymous-pro)
 * [Decima Mono](https://www.myfonts.com/fonts/tipografiaramis/decima-mono/)
