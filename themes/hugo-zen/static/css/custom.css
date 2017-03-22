@@ -145,6 +145,13 @@ img {
   height: auto;
   vertical-align: middle;
   border: 0;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);;
+}
+
+figcaption p {
+  margin-top: 1.0rem;
+  font-family: 'Concourse T4', sans-serif;
+  font-size: 1.5rem;
 }
 
 header, footer {

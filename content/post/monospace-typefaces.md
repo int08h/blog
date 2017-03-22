@@ -39,7 +39,7 @@ A number of commercial and free typefaces fit the bill (alphabetical order):
 * [Roboto Mono](https://fonts.google.com/specimen/Roboto+Mono)
 * [Source Code Pro](http://adobe-fonts.github.io/source-code-pro/) (and derivative [Hasklig](https://github.com/i-tu/Hasklig))
 * [Triplicate](http://practicaltypography.com/triplicate.html) 
-* [Vera Sans Mono](https://www.gnome.org/fonts/) (and derivatives [DejaVu Sans Mono](https://dejavu-fonts.github.io/), [DejaVu Sans Code](https://github.com/SSNikolaevich/DejaVuSansCode), [Hack](http://sourcefoundry.org/hack/))
+* [Vera Sans Mono](https://www.gnome.org/fonts/) (and derivatives [DejaVu Sans Mono](https://dejavu-fonts.github.io/), [DejaVu Sans Code](https://github.com/SSNikolaevich/DejaVuSansCode), [Hack](http://sourcefoundry.org/hack/), [Menlo](https://en.wikipedia.org/wiki/Menlo_(typeface)))
 
 Several otherwise great typefaces lacked one or more of my requirements and did not make the cut:
 
@@ -50,9 +50,24 @@ Several otherwise great typefaces lacked one or more of my requirements and did 
 | [Share Tech Mono](https://fonts.google.com/specimen/Share+Tech+Mono) | Yes | No | No |  Yes | Yes |
 | [TheSans Mono](http://www.lucasfonts.com/fonts/thesansmono/) | Yes | Yes | Yes |  Yes | No[^3] |
 
-[^2]: The `woff` version offered on the M+ site does not render all whitespace correctly. Taking the `ttf` versions and converting to `woff` via FontSquirrel ("Fix missing ..." features enabled) produces correct versions of 1M and 1MN but 2M still renders incorrectly. 
+For you Apple fans: **Monaco** lacks both italic and bold while **Menlo** is already represented as it's a **Vera Sans Mono** derivative.
 
-[^3]: Webfont licensing is per-style so each of book, italic, bold, and bold italic requires a separate fee. Noteworthy that the fee is one-time, making it a great deal for a high-traffic site, but a bit rich for a personal blog.
+[^2]: The `woff` version offered on the M+ site does not render all whitespace correctly. Taking the `ttf` versions and converting to `woff` via [FontSquirrel](https://www.fontsquirrel.com/tools/webfont-generator) (various "Expert" option permutations attempted) produces correct versions of 1M and 1MN but 2M still renders incorrectly. 
+
+[^3]: LucasFonts [webfont](http://www.lucasfonts.com/webfonts/) licensing is per-style. Book, italic, bold, and bold italic each require a separate fee. The fee is both tiered and one-time, making it a great deal for a high-traffic site, but is a bit rich for a personal blog.
+
+# How They Look
+
+Below are the candidate typefaces at 18 points (except Monoid as noted below) rendered on Windows and MacOS.
+
+{{< figure src="/images/by_width_windows.png" link="/images/by_width_windows.png" caption="Typefaces by width on Windows 7; 18pt unless otherwise noted (click to enlarge)" >}}
+
+{{< figure src="/images/by_width_mac.png" link="/images/by_width_mac.png" caption="Typefaces by width on MacOS; 18pt unless otherwise noted (click to enlarge)" >}}
+
+Observations:
+
+1. **Monoid** is big, *really big*. Its 18 point form so dwarfs the others I suspect an inadvertant error or typo in its definition.
+2. From a metrics standpoint **Decima Mono Pro**, **DejaVu Sans Mono** (and other **Vera** derivatives), **Fira Mono**, **Hack**, **Input Mono Narrow**, and **Source Code Pro** are identical. They can serve as drop-in replacements (size-wise) for *Courier* and *Courier New*.
 
 # Typefaces of Note
 
