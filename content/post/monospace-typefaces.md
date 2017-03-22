@@ -58,7 +58,9 @@ For you Apple fans: **Monaco** lacks both italic and bold while **Menlo** is alr
 
 # How They Look
 
-Below are the candidate typefaces at 18 points (except Monoid as noted below) rendered on Windows and MacOS.
+Below are the candidate typefaces at 18 points (except Monoid as noted below) rendered on Windows and MacOS[^4].
+
+[^4]: Why images and not direct comparison via webfont? For some of the commercial fonts I purchased only a desktop license of the book/regular weight. Webfont licenses are separate. 
 
 {{< figure src="/images/by_width_windows.png" link="/images/by_width_windows.png" caption="Typefaces by width on Windows 7; 18pt unless otherwise noted (click to enlarge)" >}}
 
@@ -68,6 +70,8 @@ Observations:
 
 1. **Monoid** is big, *really big*. Its 18 point form so dwarfs the others I suspect an inadvertant error or typo in its definition.
 2. From a metrics standpoint **Decima Mono Pro**, **DejaVu Sans Mono** (and other **Vera** derivatives), **Fira Mono**, **Hack**, **Input Mono Narrow**, and **Source Code Pro** are identical. They can serve as drop-in replacements (size-wise) for *Courier* and *Courier New*.
+3. **Consolas** is much more compact than I realized. Those Windows users that have unconciously habituated to its compact form might find the above *Courier-esque* families too big.
+4. **PragmataPro** and **Iosevka** take the cake for most compact monospace typeface.
 
 # Typefaces of Note
 
