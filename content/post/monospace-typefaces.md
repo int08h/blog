@@ -5,20 +5,26 @@ hidefromhome = "true"
 
 +++
 
-Every perfectionist programmer will at some point need to choose a typeface for coding. Good Luck. 
-Coding typefaces proliferate like programming languages along with endless arguments over the details:
+Every programmer will at some point need to choose a typeface for coding. If you have
+perfectionist tendencies, good luck. Coding typefaces proliferate like programming
+languages. And no programming-related domain is complete without endless arguments over the details:
 monospace vs. proportional; ligatures vs not; bitmapped vs vector.
 
 In choosing a typeface to display code on this site, my minimum requirements were:
 
 * Monospaced
-* Disambiguated latin glyphs `il17` and `oO0`
-* Regular (book) and bold weights with an italic for each.
-* TrueType hints for on-screen display.
-* Flawless `woff` and `woff2` versions.
+* Supports *Basic Latin* plus *General Punctuation* Unicode at minimum
+* Disambiguated similar glyphs like `il17` and `oO0`
+* Regular (book) and bold weights with an italic for each
+* TrueType hints for on-screen display
+* Flawless `woff` and `woff2` versions
 
-I do not need extensive unicode support nor do I want ligatures. A number of commercial and free typefaces 
-fit the bill and I looked at (alphabetical order):
+Extensive unicode support and/or ligatures are not only unecessary, but undesireable as they
+can bloat download size. 
+
+# Candidates
+
+A number of commercial and free typefaces fit the bill (alphabetical order):
 
 * [Decima Mono](https://www.myfonts.com/fonts/tipografiaramis/decima-mono/)
 * [Iosevka](https://be5invis.github.io/Iosevka/)
