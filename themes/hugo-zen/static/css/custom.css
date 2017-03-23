@@ -62,7 +62,6 @@
   font-style: normal;
 }
 
-
 @font-face {
   font-family: 'Input Mono';
   src: url('/font/InputMonoCompressed-BoldItalic.woff2') format('woff2'),
@@ -86,6 +85,11 @@ pre, code {
   font-family: "Input Mono", monospace;
   font-weight: 400;
   font-size: 100%;
+  -moz-font-feature-settings:"ss11" 1, "ss12" 1, "ss02" 1, "ss03" 1, "ss10" 1, "zero" 1;
+  -ms-font-feature-settings:"ss11" 1, "ss12" 1, "ss02" 1, "ss03" 1, "ss10" 1, "zero" 1;
+  -o-font-feature-settings:"ss11" 1, "ss12" 1, "ss02" 1, "ss03" 1, "ss10" 1, "zero" 1;
+  -webkit-font-feature-settings:"ss11" 1, "ss12" 1, "ss02" 1, "ss03" 1, "ss10" 1, "zero" 1;
+  font-feature-settings:"ss11" 1, "ss12" 1, "ss02" 1, "ss03" 1, "ss10" 1, "zero" 1;
 }
 
 pre > code {
@@ -218,6 +222,11 @@ ol > li {
   font-weight: 200;
   font-size: 3.0rem;
   line-height: 1rem;
+  -moz-font-feature-settings:"ss11" 1, "ss12" 1, "ss02" 1, "ss03" 1, "ss10" 1, "zero" 1;
+  -ms-font-feature-settings:"ss11" 1, "ss12" 1, "ss02" 1, "ss03" 1, "ss10" 1, "zero" 1;
+  -o-font-feature-settings:"ss11" 1, "ss12" 1, "ss02" 1, "ss03" 1, "ss10" 1, "zero" 1;
+  -webkit-font-feature-settings:"ss11" 1, "ss12" 1, "ss02" 1, "ss03" 1, "ss10" 1, "zero" 1;
+  font-feature-settings:"ss11" 1, "ss12" 1, "ss02" 1, "ss03" 1, "ss10" 1, "zero" 1;
 }
 .site-title a {
   text-decoration: none;
@@ -261,6 +270,11 @@ ol > li {
   color: #888;
   font-family: "Input Mono";
   font-weight: 200;
+  -moz-font-feature-settings:"ss11" 1, "ss12" 1, "ss02" 1, "ss03" 1, "ss10" 1, "zero" 1;
+  -ms-font-feature-settings:"ss11" 1, "ss12" 1, "ss02" 1, "ss03" 1, "ss10" 1, "zero" 1;
+  -o-font-feature-settings:"ss11" 1, "ss12" 1, "ss02" 1, "ss03" 1, "ss10" 1, "zero" 1;
+  -webkit-font-feature-settings:"ss11" 1, "ss12" 1, "ss02" 1, "ss03" 1, "ss10" 1, "zero" 1;
+  font-feature-settings:"ss11" 1, "ss12" 1, "ss02" 1, "ss03" 1, "ss10" 1, "zero" 1;
 }
 
 .footer-link {
