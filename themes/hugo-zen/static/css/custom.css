@@ -31,36 +31,46 @@
 }
 
 @font-face {
-  font-family: 'M+ 1MN';
-  src: url('/font/mplus-1mn-light.woff2') format('woff2'),
-       url('/font/mplus-1mn-light.woff') format('woff');
-  font-weight: 200;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'M+ 1M';
-  src: url('/font/mplus-1m-regular.woff2') format('woff2'),
-       url('/font/mplus-1m-regular.woff') format('woff');
+  font-family: 'Input Mono';
+  src: url('/font/InputMonoCompressed-Regular.woff2') format('woff2'),
+       url('/font/InputMonoCompressed-Regular.woff') format('woff');
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'M+ 1M';
-  src: url('/font/mplus-1m-bold.woff2') format('woff2'),
-       url('/font/mplus-1m-bold.woff') format('woff');
+  font-family: 'Input Mono';
+  src: url('/font/InputMonoCompressed-Italic.woff2') format('woff2'),
+       url('/font/InputMonoCompressed-Italic.woff') format('woff');
+  font-weight: 400;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Input Mono';
+  src: url('/font/InputMonoCompressed-Bold.woff2') format('woff2'),
+       url('/font/InputMonoCompressed-Bold.woff') format('woff');
   font-weight: 700;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'M+ 1M';
-  src: url('/font/mplus-1m-light.woff2') format('woff2'),
-       url('/font/mplus-1m-light.woff') format('woff');
+  font-family: 'Input Mono';
+  src: url('/font/InputMonoCompressed-ExtraLight.woff2') format('woff2'),
+       url('/font/InputMonoCompressed-ExtraLight.woff') format('woff');
   font-weight: 200;
   font-style: normal;
 }
+
+
+@font-face {
+  font-family: 'Input Mono';
+  src: url('/font/InputMonoCompressed-BoldItalic.woff2') format('woff2'),
+       url('/font/InputMonoCompressed-BoldItalic.woff') format('woff');
+  font-weight: 700;
+  font-style: italic;
+}
+
 
 blockquote, dl, figure, form, ol, p, pre, table, ul {
   margin-bottom: 2.0rem;
@@ -73,7 +83,7 @@ body {
 }
 
 pre, code {
-  font-family: "M+ 1M", monospace;
+  font-family: "Input Mono", monospace;
   font-weight: 400;
   font-size: 100%;
 }
@@ -83,7 +93,10 @@ pre > code {
 }
 
 code {
-  padding: 0 0.5rem;
+  padding-top: 0;
+  padding-bottom: 0.2rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
 }
 
 blockquote {
@@ -201,7 +214,7 @@ ol > li {
 .site-title {
   margin-top: 0;
   margin-bottom: 1rem;
-  font-family: 'M+ 1MN', monospace;
+  font-family: 'Input Mono', monospace;
   font-weight: 200;
   font-size: 3.0rem;
   line-height: 1rem;
@@ -230,6 +243,7 @@ ol > li {
 .entry-title {
   font-family: 'Concourse T4';
   margin-bottom: 0;
+  line-height: 1;
 }
 
 .entry-title a {
@@ -245,8 +259,8 @@ ol > li {
   margin-bottom: 2rem;
   font-size: 1.5rem;
   color: #888;
-  font-family: "M+ 1M";
-  font-weight: 400;
+  font-family: "Input Mono";
+  font-weight: 200;
 }
 
 .footer-link {
