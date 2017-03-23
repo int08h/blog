@@ -4,6 +4,8 @@ date = "2017-03-22T11:34:37-05:00"
 
 +++
 
+\[*Addendum*: corresponding [Reddit comments](https://www.reddit.com/r/programming/comments/60yjlk/monospace_overchoice/)\]
+
 I needed a typeface to display code on this site. That task morphed into this post.
 
 # Getting Started
@@ -11,7 +13,6 @@ I needed a typeface to display code on this site. That task morphed into this po
 > **Overchoice**...a cognitive process in which people have a difficult time making a decision when faced with many options.  
 >  
 >  -- [Wikipedia](https://en.wikipedia.org/wiki/Overchoice)
-
 
 Every programmer at some point chooses a typeface for coding. Perhaps you
 are satisfied with your editor's defaults (I envy you). Maybe you are 
@@ -29,8 +30,8 @@ My desiderata in choosing a typeface to display code on this site:
 * Flawless `woff` and `woff2` versions
 * Reasonable (to me) licensing if commercial
 
-*Width* is an especially important criteria. Narrower typefaces fit more code 
-on screen which benefits mobile and paper alike.
+*Width* is an especially important criterion: analytics indicates site traffic is 49% desktop vs 51% mobile. 
+Narrower typefaces fit more code on screen which benefits mobile and paper alike.
 
 # Candidates
 
