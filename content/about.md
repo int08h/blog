@@ -41,6 +41,6 @@ Because the `.com` domain of my favorite PC interrupt, `int13h`, was already tak
 
 Generated using [Hugo](https://gohugo.io/). Theme derived from [Hugo-Zen](https://github.com/rakuishi/hugo-zen).
 Body typeface is [Merriweather](https://fonts.google.com/specimen/Merriweather).
-Titles and headings use [Concourse](http://concoursefont.com/) in C3 and T3 styles.
-Monospace from the [M+ Font](http://mplus-fonts.osdn.jp/) family using 1MN for the site's title and 
-1M for code. Syntax highlighting by [`highlight.js`](https://highlightjs.org/).
+Titles and headings use [Concourse](http://concoursefont.com/).
+Monospace is [Input Mono Compressed](http://input.fontbureau.com/) in various weights.
+Syntax highlighting by [`highlight.js`](https://highlightjs.org/).
