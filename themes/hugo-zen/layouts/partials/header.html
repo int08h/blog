@@ -4,11 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   {{ .Hugo.Generator }}
-  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Merriweather:400,400i,700">
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+  <link rel="stylesheet" href="/css/base.css">
   <link rel="stylesheet" href="/css/custom.css">
-  <link rel="stylesheet" href="/css/atom-one-light.min.css">
   <link rel="alternate" href="/index.xml" type="application/rss+xml" title="{{ .Site.Title }}">
   <title>{{ $isHomePage := eq .Title .Site.Title }}{{ .Title }}{{ if eq $isHomePage false }} - {{ .Site.Title }}{{ end }}</title>
 </head>

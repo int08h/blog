@@ -82,7 +82,7 @@ Please forgive slight color and image size differences.
 Observations:
 
 1. **Monoid** is big, *really big*. Its 18 point form so dwarfs the others I suspect an inadvertent error or typo in its definition.
-2. *A cluster of Courer-sized cousins*: **Decima Mono Pro**, **DejaVu Sans Mono** (and other **Vera** derivatives), **Fira Mono**, **Hack**, **Input Mono Narrow**, and **Source Code Pro** have identical metrics. They are drop-in replacements (size-wise) for *Courier* and *Courier New*.
+2. *A cluster of Courier-sized cousins*: **Decima Mono Pro**, **DejaVu Sans Mono** (and other **Vera** derivatives), **Fira Mono**, **Hack**, **Input Mono Narrow**, and **Source Code Pro** have identical metrics. They are drop-in replacements (size-wise) for *Courier* and *Courier New*.
 3. **Consolas** is much more compact than I realized. Windows users that have unconsciously habituated to its compact form may find the above *Courier-sized* faces too wide.
 4. **PragmataPro** and **Iosevka** win the prize for most compact monospace typeface.
 5. For the observant: **Decima Mono Pro** does have a slashed zero. It's available as an OpenType alternate and I forgot to enable it for the screen-shots.

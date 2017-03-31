@@ -18,7 +18,6 @@ PGP key at [keybase.io/sstock](https://keybase.io/sstock) if required.
 All content on `int08h` is copyright (c) 2017 int08h LLC and licensed under the Creative Commons 
 [Attribution-ShareAlike 4.0 License](https://creativecommons.org/licenses/by-sa/4.0/legalcode). 
 
-
 Stuart Stock writes on `int08h` in his personal capacity and is solely responsible for its content. 
 The opinions expressed and statements made do not reflect the opinions, policies, or positions of any 
 employers past or present. 

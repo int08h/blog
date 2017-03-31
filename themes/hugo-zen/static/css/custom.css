@@ -1,4 +1,36 @@
 @font-face {
+  font-family: 'Merriweather';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/font/merriweather-v15-latin-regular.woff2') format('woff2'), 
+       url('/font/merriweather-v15-latin-regular.woff') format('woff'); 
+}
+
+@font-face {
+  font-family: 'Merriweather';
+  font-style: italic;
+  font-weight: 400;
+  src: url('/font/merriweather-v15-latin-italic.woff2') format('woff2'), 
+       url('/font/merriweather-v15-latin-italic.woff') format('woff'); 
+}
+
+@font-face {
+  font-family: 'Merriweather';
+  font-style: normal;
+  font-weight: 700;
+  src: url('/font/merriweather-v15-latin-700.woff2') format('woff2'), 
+       url('/font/merriweather-v15-latin-700.woff') format('woff'); 
+}
+
+@font-face {
+  font-family: 'Merriweather';
+  font-style: italic;
+  font-weight: 700;
+  src: url('/font/merriweather-v15-latin-700italic.woff2') format('woff2'),
+       url('/font/merriweather-v15-latin-700italic.woff') format('woff'); 
+}
+
+@font-face {
   font-family: 'Concourse T3';
   src: url('/font/concourse_t3_regular.woff2') format('woff2'),
        url('/font/concourse_t3_regular.woff') format('woff');
@@ -85,11 +117,7 @@ pre, code {
   font-family: "Input Mono", monospace;
   font-weight: 400;
   font-size: 100%;
-  -moz-font-feature-settings:"ss11" 1, "ss12" 1, "ss02" 1, "ss03" 1, "ss10" 1, "zero" 1;
-  -ms-font-feature-settings:"ss11" 1, "ss12" 1, "ss02" 1, "ss03" 1, "ss10" 1, "zero" 1;
-  -o-font-feature-settings:"ss11" 1, "ss12" 1, "ss02" 1, "ss03" 1, "ss10" 1, "zero" 1;
-  -webkit-font-feature-settings:"ss11" 1, "ss12" 1, "ss02" 1, "ss03" 1, "ss10" 1, "zero" 1;
-  font-feature-settings:"ss11" 1, "ss12" 1, "ss02" 1, "ss03" 1, "ss10" 1, "zero" 1;
+  font-feature-settings: "ss11" 1, "ss12" 1, "ss02" 1, "ss03" 1, "ss10" 1, "zero" 1;
 }
 
 pre > code {
@@ -222,11 +250,7 @@ ol > li {
   font-weight: 200;
   font-size: 3.0rem;
   line-height: 1rem;
-  -moz-font-feature-settings:"ss11" 1, "ss12" 1, "ss02" 1, "ss03" 1, "ss10" 1, "zero" 1;
-  -ms-font-feature-settings:"ss11" 1, "ss12" 1, "ss02" 1, "ss03" 1, "ss10" 1, "zero" 1;
-  -o-font-feature-settings:"ss11" 1, "ss12" 1, "ss02" 1, "ss03" 1, "ss10" 1, "zero" 1;
-  -webkit-font-feature-settings:"ss11" 1, "ss12" 1, "ss02" 1, "ss03" 1, "ss10" 1, "zero" 1;
-  font-feature-settings:"ss11" 1, "ss12" 1, "ss02" 1, "ss03" 1, "ss10" 1, "zero" 1;
+  font-feature-settings: "ss11" 1, "ss12" 1, "ss02" 1, "ss03" 1, "ss10" 1, "zero" 1;
 }
 .site-title a {
   text-decoration: none;
@@ -250,7 +274,7 @@ ol > li {
 }
 
 .entry-title {
-  font-family: 'Concourse T4';
+  font-family: 'Concourse T4', sans-serif;
   margin-bottom: 0;
   line-height: 1;
 }
@@ -268,13 +292,9 @@ ol > li {
   margin-bottom: 2rem;
   font-size: 1.5rem;
   color: #888;
-  font-family: "Input Mono";
-  font-weight: 200;
-  -moz-font-feature-settings:"ss11" 1, "ss12" 1, "ss02" 1, "ss03" 1, "ss10" 1, "zero" 1;
-  -ms-font-feature-settings:"ss11" 1, "ss12" 1, "ss02" 1, "ss03" 1, "ss10" 1, "zero" 1;
-  -o-font-feature-settings:"ss11" 1, "ss12" 1, "ss02" 1, "ss03" 1, "ss10" 1, "zero" 1;
-  -webkit-font-feature-settings:"ss11" 1, "ss12" 1, "ss02" 1, "ss03" 1, "ss10" 1, "zero" 1;
-  font-feature-settings:"ss11" 1, "ss12" 1, "ss02" 1, "ss03" 1, "ss10" 1, "zero" 1;
+  font-family: "Input Mono", monospace;
+  font-weight: 400;
+  font-feature-settings: "ss11" 1, "ss12" 1, "ss02" 1, "ss03" 1, "ss10" 1, "zero" 1;
 }
 
 .footer-link {

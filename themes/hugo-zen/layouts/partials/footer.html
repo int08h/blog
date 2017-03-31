@@ -1,7 +1,7 @@
 
 <footer role="contentinfo">
   <div class="hr"></div>
-  <div class="copyright">Copyright &copy; 2017 int08h LLC. Licensed 
+  <div class="copyright">&copy; 2017 int08h LLC. Licensed 
       <a href="//creativecommons.org/licenses/by-sa/4.0/legalcode">CC-BY-SA 4.0</a>.
   </div>
 </footer>
@@ -16,8 +16,12 @@
 </script>
 <script async src='https://www.google-analytics.com/analytics.js'></script>
 
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.10.0/highlight.min.js"></script>
-<script>hljs.initHighlightingOnLoad();</script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.10.0/highlight.min.js"></script>
+<script>
+window.addEventListener("load", function(evt) {
+  hljs.initHighlighting();
+});
+</script>
 
 </body>
 </html>
