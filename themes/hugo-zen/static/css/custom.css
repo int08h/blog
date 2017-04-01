@@ -18,16 +18,16 @@
   font-family: 'Merriweather';
   font-style: normal;
   font-weight: 700;
-  src: url('/font/merriweather-v15-latin-700.woff2') format('woff2'), 
-       url('/font/merriweather-v15-latin-700.woff') format('woff'); 
+  src: url('/font/merriweather-v15-latin-bold.woff2') format('woff2'), 
+       url('/font/merriweather-v15-latin-bold.woff') format('woff'); 
 }
 
 @font-face {
   font-family: 'Merriweather';
   font-style: italic;
   font-weight: 700;
-  src: url('/font/merriweather-v15-latin-700italic.woff2') format('woff2'),
-       url('/font/merriweather-v15-latin-700italic.woff') format('woff'); 
+  src: url('/font/merriweather-v15-latin-bolditalic.woff2') format('woff2'),
+       url('/font/merriweather-v15-latin-bolditalic.woff') format('woff'); 
 }
 
 @font-face {
@@ -47,19 +47,11 @@
 }
 
 @font-face {
-  font-family: 'Concourse C3';
-  src: url('/font/concourse_c3_regular.woff2') format('woff2'),
-       url('/font/concourse_c3_regular.woff') format('woff');
-  font-weight: 400;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Concourse C4';
-  src: url('/font/concourse_c4_regular.woff2') format('woff2'),
-       url('/font/concourse_c4_regular.woff') format('woff');
+  font-family: 'Concourse T4';
+  src: url('/font/concourse_t4_italic.woff2') format('woff2'),
+       url('/font/concourse_t4_italic.woff') format('woff');
   font-weight: 500;
-  font-style: normal;
+  font-style: italic;
 }
 
 @font-face {
@@ -197,17 +189,19 @@ figcaption p {
   margin-top: 1.0rem;
   font-family: 'Concourse T4', sans-serif;
   font-size: 1.5rem;
+  font-style: italic;
 }
 
 header, footer {
   margin: 4rem 0;
   text-align: left;
-  font-family: 'Concourse C3', sans-serif;
+  font-family: 'Concourse T3', sans-serif;
+  letter-spacing: 0.12rem;
 }
 
 footer {
-  font-size: 1.4rem;
-  font-feature-settings: "ss10" 1;
+  font-size: 1.2rem;
+  text-transform: uppercase;
 }
 
 main {
