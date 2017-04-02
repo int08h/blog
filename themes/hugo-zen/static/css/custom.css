@@ -284,11 +284,21 @@ ol > li {
 .entry-meta {
   display: inline-block;
   margin-bottom: 2rem;
-  font-size: 1.5rem;
+  font-size: 90%;
+  line-height: 1rem;
   color: #888;
   font-family: "Input Mono", monospace;
   font-weight: 400;
   font-feature-settings: "ss11" 1, "ss12" 1, "ss02" 1, "ss03" 1, "ss10" 1, "zero" 1;
+}
+
+.entry-meta-main {
+  margin-bottom: 0;
+}
+
+.entry-description {
+  font-style: italic;
+  margin-bottom: 3.0rem;
 }
 
 .footer-link {

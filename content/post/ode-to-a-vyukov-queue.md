@@ -2,6 +2,7 @@
 date = "2017-03-16T13:19:09-06:00"
 title = "Ode to a Vyukov Queue"
 hidefromhome = "false"
+description = "A look at the elegant Vyukov MPSC queue and why it works so darn well." 
 
 +++
 

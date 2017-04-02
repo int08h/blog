@@ -1,6 +1,7 @@
 +++
 title = "Monospace Overchoice"
 date = "2017-03-22T11:34:37-05:00"
+description = "Searching out a monospace typeface. So many options."
 
 +++
 
