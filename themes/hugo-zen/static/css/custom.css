@@ -63,6 +63,14 @@
 }
 
 @font-face {
+  font-family: 'Input Mono';
+  src: url('/font/InputMonoCompressed-BoldItalic.woff2') format('woff2'),
+       url('/font/InputMonoCompressed-BoldItalic.woff') format('woff');
+  font-weight: 700;
+  font-style: italic;
+}
+
+@font-face {
   font-family: 'Input Sans';
   src: url('/font/InputSansCompressed-ExtraLight.woff2') format('woff2'),
        url('/font/InputSansCompressed-ExtraLight.woff') format('woff');
@@ -266,7 +274,7 @@ ol > li {
 }
 
 .entry-title {
-  font-family: 'Input Sans', serif;
+  font-family: 'Input Sans', sans-serif;
   font-weight: 400;
   margin-bottom: 0;
 }
