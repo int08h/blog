@@ -31,30 +31,6 @@
 }
 
 @font-face {
-  font-family: 'Concourse T3';
-  src: url('/font/concourse_t3_regular.woff2') format('woff2'),
-       url('/font/concourse_t3_regular.woff') format('woff');
-  font-weight: 400;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Concourse T4';
-  src: url('/font/concourse_t4_regular.woff2') format('woff2'),
-       url('/font/concourse_t4_regular.woff') format('woff');
-  font-weight: 500;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Concourse T4';
-  src: url('/font/concourse_t4_italic.woff2') format('woff2'),
-       url('/font/concourse_t4_italic.woff') format('woff');
-  font-weight: 500;
-  font-style: italic;
-}
-
-@font-face {
   font-family: 'Input Mono';
   src: url('/font/InputMonoCompressed-Regular.woff2') format('woff2'),
        url('/font/InputMonoCompressed-Regular.woff') format('woff');
@@ -79,19 +55,19 @@
 }
 
 @font-face {
-  font-family: 'Input Mono';
-  src: url('/font/InputMonoCompressed-ExtraLight.woff2') format('woff2'),
-       url('/font/InputMonoCompressed-ExtraLight.woff') format('woff');
+  font-family: 'Input Sans';
+  src: url('/font/InputSansCompressed-ExtraLight.woff2') format('woff2'),
+       url('/font/InputSansCompressed-ExtraLight.woff') format('woff');
   font-weight: 200;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Input Mono';
-  src: url('/font/InputMonoCompressed-BoldItalic.woff2') format('woff2'),
-       url('/font/InputMonoCompressed-BoldItalic.woff') format('woff');
-  font-weight: 700;
-  font-style: italic;
+  font-family: 'Input Sans';
+  src: url('/font/InputSansCompressed-Regular.woff2') format('woff2'),
+       url('/font/InputSansCompressed-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
 }
 
 
@@ -153,9 +129,10 @@ a:hover {
 }
 
 h1, h2, h3 {
-  font-family: 'Concourse T3', sans-serif;
-  font-weight: 400;
-  letter-spacing: 0;
+  font-family: 'Input Sans', sans-serif;
+  font-weight: 200;
+  letter-spacing: -0.12rem;
+  font-feature-settings: "ss11" 1, "ss12" 1, "ss02" 1, "ss03" 1, "ss10" 1, "zero" 1;
 }
 
 h1 { 
@@ -193,19 +170,20 @@ figcaption p {
 }
 
 header, footer {
-  margin: 4rem 0;
+  margin: 3rem 0;
   text-align: left;
-  font-family: 'Concourse T3', sans-serif;
+  font-family: 'Input Sans', sans-serif;
+  font-feature-settings: "ss11" 1, "ss12" 1, "ss02" 1, "ss03" 1, "ss10" 1, "zero" 1;
+  font-size: 1.6rem;
   letter-spacing: 0.12rem;
 }
 
 footer {
   font-size: 1.2rem;
-  text-transform: uppercase;
 }
 
 main {
-  margin: 4rem 0;
+  margin: 3rem 0;
 }
 
 ul > li {
@@ -240,7 +218,7 @@ ol > li {
 .site-title {
   margin-top: 0;
   margin-bottom: 1rem;
-  font-family: 'Input Mono', monospace;
+  font-family: 'Input Sans', monospace;
   font-weight: 200;
   font-size: 3.0rem;
   line-height: 1rem;
@@ -268,9 +246,9 @@ ol > li {
 }
 
 .entry-title {
-  font-family: 'Concourse T4', sans-serif;
+  font-family: 'Input Sans', serif;
+  font-weight: 400;
   margin-bottom: 0;
-  line-height: 1;
 }
 
 .entry-title a {
@@ -284,10 +262,11 @@ ol > li {
 .entry-meta {
   display: inline-block;
   margin-bottom: 2rem;
-  font-size: 90%;
+  font-size: 85%;
+  letter-spacing: 0.05rem;
   line-height: 1rem;
   color: #888;
-  font-family: "Input Mono", monospace;
+  font-family: "Merriweather", monospace;
   font-weight: 400;
   font-feature-settings: "ss11" 1, "ss12" 1, "ss02" 1, "ss03" 1, "ss10" 1, "zero" 1;
 }
@@ -306,9 +285,9 @@ ol > li {
 }
 
 .hr {
-  height: 2px;
+  height: 1px;
   margin: 1rem 0;
-  background: #E1E1E1;
+  background: #90A4AE;
 }
 
 .footnotes {
