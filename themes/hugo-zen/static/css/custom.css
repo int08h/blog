@@ -32,6 +32,14 @@
 
 @font-face {
   font-family: 'Input Mono';
+  src: url('/font/InputMonoCompressed-ExtraLight.woff2') format('woff2'),
+       url('/font/InputMonoCompressed-ExtraLight.woff') format('woff');
+  font-weight: 200;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Input Mono';
   src: url('/font/InputMonoCompressed-Regular.woff2') format('woff2'),
        url('/font/InputMonoCompressed-Regular.woff') format('woff');
   font-weight: 400;
@@ -155,6 +163,10 @@ h3 {
   font-size: 1.75rem; 
   margin-bottom: 0.5rem;
   color: #455A64;
+}
+
+h1 > code, h2 > code, h3 > code {
+  font-weight: 200;
 }
 
 strong, b {
