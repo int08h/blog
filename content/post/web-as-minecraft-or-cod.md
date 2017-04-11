@@ -25,6 +25,10 @@ using these simple and robust rules in an open-world. Including
 full-blown [computers](http://minecraft.gamepedia.com/Tutorials/Redstone_computers) that
 themselves could run Minecraft.
 
+These simple rules gave us the first [webcam](http://www.bbc.com/news/technology-20439301),
+[Craigslist](www.craigslist.com), and [Blogger](http://www.blogger.com) amongst others. 
+And I would be remiss to not include Google's so-simple-it-hurts search interface.
+
 ## Web As Call-of-Duty
 
 > The other vision is of the **web as Call of Duty**--an exquisitely produced, 
