@@ -5,33 +5,25 @@ hidefromhome = true
 
 +++
 
-# Anti-Amplification
+Goals:
+
+1. Rough time sync -- clocks that are within seconds of the "true" time. Not an NTP/PTP replacement. 
+2. Secure -- Roughtime servers sign every reply and that signature can be verified by *any* client. There are no client-specific keys nor connection negotiations.
+2. Internet scalable -- The protocol is built upon efficient and batchable operations. The network layer is constructed to prevent DDoS amplification.
+3. 
+
+# Anti-Amplification and Request/Response Rate Asymmetry 
+
+If batches of 64 requests are allowed then a Skylake chip can sign 4.3 million requests per core-second.
+
+At that rate, the CPU time for public-key signatures becomes insignificant compared to the work needed to 
+handle that number of packets. Since we require that requests be padded to 1KB to avoid becoming a DDoS 
+amplifier, a 10Gbps network link could only deliver 1.2 million requests per second anyway.
 
 # Efficient Public Key Signatures
 
 # Amortizng Signature Costs
 Sending request to roughtime.sandbox.google.com/173.194.202.158:2002
-Read message of 360 bytes from roughtime.sandbox.google.com/173.194.202.158:2002:
-RtMessage|5|{
-  SIG(64) = 936e14812e0297a9fb388b411428ee3485ac8d61ba815e01703d146918420f8c2b31f3ef73f930f03e655511b228d92c9499ac9f9f058da4d99807a097f57b03
-  PATH(0) = 
-  SREP(100) = RtMessage|3|{
-    RADI(4) = 40420f00
-    MIDP(8) = f3c3bd72114d0500
-    ROOT(64) = 2eb2bc5d856a7e0608e40b0e5562cb1a47ae3b77f2a5999703c9f2197b9ee1c6fabaf7726b022b1c1266913cec321fadbf58c49ce67118e2fcf6c6f8ae28d513
-  }
-  CERT(152) = RtMessage|2|{
-    SIG(64) = 615533dc03a483eebe78db8c1161d5fa31bdb424c78c681bf64e4b9e679ca924f2c6211c435f2500d62934869c75acdca4b4ff3bd359f32d3eb419cf8cf0f809
-    DELE(72) = RtMessage|3|{
-      PUBK(32) = 7cc511f1d9b2c7004297c5fdc7df947b73b1459ee2689bac5df1e70ff44bb3a1
-      MINT(8) = 00a068400f4d0500
-      MAXT(8) = 00809dd5734d0500
-    }
-  }
-  INDX(4) = 00000000
-}
-
-Response INVALID: nonce not found in response Merkle tree
 Read message of 488 bytes from roughtime.sandbox.google.com/173.194.202.158:2002:
 RtMessage|5|{
   SIG(64) = 91c2018ee3bf3f6fae2f749dda25e54e993add44f37a18c98772532a7da7d0d8169d6f48e321cb847e3b8bab4744bd3a3d6590ca4eb702889b72d09ab9bd6e03
@@ -54,6 +46,7 @@ RtMessage|5|{
 
 midpoint    : 2017-04-13T19:36:58.375Z (radius 1 sec)
 local clock : 2017-04-13T19:37:04.325Z
+
 Read message of 488 bytes from roughtime.sandbox.google.com/173.194.202.158:2002:
 RtMessage|5|{
   SIG(64) = 91c2018ee3bf3f6fae2f749dda25e54e993add44f37a18c98772532a7da7d0d8169d6f48e321cb847e3b8bab4744bd3a3d6590ca4eb702889b72d09ab9bd6e03
@@ -74,7 +67,6 @@ RtMessage|5|{
   INDX(4) = 01000000
 }
 
-Response INVALID: Merkle tree validation failed
 Read message of 488 bytes from roughtime.sandbox.google.com/173.194.202.158:2002:
 RtMessage|5|{
   SIG(64) = 91c2018ee3bf3f6fae2f749dda25e54e993add44f37a18c98772532a7da7d0d8169d6f48e321cb847e3b8bab4744bd3a3d6590ca4eb702889b72d09ab9bd6e03
@@ -95,10 +87,32 @@ RtMessage|5|{
   INDX(4) = 02000000
 }
 
-Response INVALID: Merkle tree validation failed
-No reply received from roughtime.sandbox.google.com/173.194.202.158:2002
 Client 0 : 732ae00a62cc3de2d9656fdb9fcbcd8c9439b269b2074332c9a8d1c6f1da36d85f7361328aaa503ef76054a8fbc7e9a168ed4719567cbd0c25f5f7b028b49428
-Client 1 : 2eb2bc5d856a7e0608e40b0e5562cb1a47ae3b77f2a5999703c9f2197b9ee1c6fabaf7726b022b1c1266913cec321fadbf58c49ce67118e2fcf6c6f8ae28d513
 Client 2 : f387b87e30d84b85bf28988ca1573b153f2e7066c23a38b728490c9d509796328290b8ff2048ba32f7336ff097159700553e9dd7917e1e75d85527ed6aa1872f
 Client 3 : 6a3cde162db863302629011f6aba5ed01a5d4f38537d3708db2b5f6ba13ac3a0353a4cfde06a0d0f7949e29db50016bf8b55428676bdd2d7ae56a4609f8e3407
+
+xxx Client 1 : 2eb2bc5d856a7e0608e40b0e5562cb1a47ae3b77f2a5999703c9f2197b9ee1c6fabaf7726b022b1c1266913cec321fadbf58c49ce67118e2fcf6c6f8ae28d513
+
+RtMessage|5|{
+  SIG(64) = 936e14812e0297a9fb388b411428ee3485ac8d61ba815e01703d146918420f8c2b31f3ef73f930f03e655511b228d92c9499ac9f9f058da4d99807a097f57b03
+  PATH(0) = 
+  SREP(100) = RtMessage|3|{
+    RADI(4) = 40420f00
+    MIDP(8) = f3c3bd72114d0500
+    ROOT(64) = 2eb2bc5d856a7e0608e40b0e5562cb1a47ae3b77f2a5999703c9f2197b9ee1c6fabaf7726b022b1c1266913cec321fadbf58c49ce67118e2fcf6c6f8ae28d513
+  }
+  CERT(152) = RtMessage|2|{
+    SIG(64) = 615533dc03a483eebe78db8c1161d5fa31bdb424c78c681bf64e4b9e679ca924f2c6211c435f2500d62934869c75acdca4b4ff3bd359f32d3eb419cf8cf0f809
+    DELE(72) = RtMessage|3|{
+      PUBK(32) = 7cc511f1d9b2c7004297c5fdc7df947b73b1459ee2689bac5df1e70ff44bb3a1
+      MINT(8) = 00a068400f4d0500
+      MAXT(8) = 00809dd5734d0500
+    }
+  }
+  INDX(4) = 00000000
+}
+
+# Client Request Chains as Evidence
+
+## Why Not Server Chains Too?
 
