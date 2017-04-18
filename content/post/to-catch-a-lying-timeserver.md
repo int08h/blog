@@ -9,8 +9,8 @@ Goals:
 
 1. Rough time sync -- clocks that are within seconds of the "true" time. Not an NTP/PTP replacement. 
 2. Secure -- Roughtime servers sign every reply and that signature can be verified by *any* client. There are no client-specific keys nor connection negotiations.
-2. Internet scalable -- The protocol is built upon efficient and batchable operations. The network layer is constructed to prevent DDoS amplification.
-3. 
+3. Internet scalable -- The protocol is built upon efficient and batchable operations. The network layer is constructed to prevent DDoS amplification.
+
 
 # Anti-Amplification and Request/Response Rate Asymmetry 
 
@@ -19,6 +19,13 @@ If batches of 64 requests are allowed then a Skylake chip can sign 4.3 million r
 At that rate, the CPU time for public-key signatures becomes insignificant compared to the work needed to 
 handle that number of packets. Since we require that requests be padded to 1KB to avoid becoming a DDoS 
 amplifier, a 10Gbps network link could only deliver 1.2 million requests per second anyway.
+
+Responses smaller than requests. log2(tree size) means even a batch of 64 signatures the tree
+path sent to client is log2(depth 64) == depth 6 and 6 * 64 bytes == 384 bytes of path data.
+
+Response size ex-path data : 360 bytes
+   64 depth tree path data : 384 bytes
+            Response Total : 744 bytes
 
 # Efficient Public Key Signatures
 
