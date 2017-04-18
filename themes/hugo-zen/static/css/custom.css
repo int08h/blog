@@ -126,7 +126,7 @@ blockquote {
   margin: 2rem 0;
   padding: 1.2rem 1rem 1.2rem 2rem;
   background: #ECEFF1;
-  border-left: 8px solid #90A4AE;
+  border-left: 4px solid #90A4AE;
 }
 blockquote > p {
   margin: 1rem 0;

@@ -46,7 +46,7 @@ And I would be remiss to not include Google's so-simple-it-hurts search interfac
 >
 > Despite the lavish production values, there's a strange sameness to everything. You're always in the same brown war zone.
 
-Do you every feel that way? Do you find many large web properties have a creepy similarity?
+Do you ever feel that way? Do you find many large web properties have a creepy similarity?
 
 ## Conclusion
 
