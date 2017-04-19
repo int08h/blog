@@ -99,7 +99,7 @@ The root node is always present in a Roughtime reply. A Merkle Tree path is incl
 covers more than one request. In our example of a response to client `C`, to verify its request client `C` 
 needs only 3 nodes: `[h(D), h(AB), h(EFG)]`. 
 
-Being a balanced tree, we know the number of path elements is bounded as `ceil(log2(batch size))`. 
+Being a balanced tree, the number of path elements is bounded as `ceil(log2(batch size))`. 
 In the case of a 64 request batch `log2(64) == 6` and `6 * 64 bytes per sha512 == 384 bytes`. This is how
 we arrive at 744 bytes for a 64-element batch response: 360 bytes response + 384 bytes path data =
 744 bytes total.
