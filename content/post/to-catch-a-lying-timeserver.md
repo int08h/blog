@@ -49,10 +49,10 @@ To scale the signing workload, Roughtime uses a [Merkle Tree](https://en.wikiped
 to sign a **batch** of client requests with a single signature operation (the root of the tree is signed).
 With a batch size of 64 a single 3.0 GHz Skylake core can sign **3.9 million** requests per second. 
 
-What about the non-signature processing and overhead needed to create responses? 
-Roughtime is designed in a way that enables 
-almost all of the non-signature processing to be re-used for all replies of a single batch; ergo 
-"compute once, reply many times".
+What about the processing and overhead needed to create responses? 
+The bulk of the response processing can be reused for all replies in a single batch[^4]. Ergo "sign once, reply many times".
+
+[^4]: Details: only the `PATH` and `INDX` tags vary client-to-client. The `SIG`, `SREP`, and `CERT` tags will be identical in all responses. 
 
 # Anti-Amplification and Request/Response Size Asymmetry 
 
@@ -73,10 +73,10 @@ requests per second. As shown above, that rate is easily handled by a single Sky
 
 You probably noticed that the response for 64 requests is suspiciously small: 744 bytes. This is not 
 a typo, recall that Roughtime uses a Merkle Tree to batch requests. When replying to clients, Roughtime
-sends only the tree nodes each client needs to verify its request is included in the tree. Roughtime does 
-not send the whole tree[^4].
+sends only the tree nodes each client needs to verify its request is included in the tree[^5]. Roughtime does 
+not send the whole tree.
 
-[^4]: This elegant idea shows up in [many](https://www.certificate-transparency.org/log-proofs-work) [other](https://blog.ethereum.org/2015/11/15/merkling-in-ethereum/) [places](https://petertodd.org/2016/opentimestamps-announcement).
+[^5]: This elegant idea shows up in [many](https://www.certificate-transparency.org/log-proofs-work) [other](https://blog.ethereum.org/2015/11/15/merkling-in-ethereum/) [places](https://petertodd.org/2016/opentimestamps-announcement).
 
 An example might help. We'll work with this Merkle Tree that batches 7 requests, `A` though `G`:
 
@@ -98,9 +98,7 @@ Imagine constructing a response to client C:
 2. To compute `h(ABCD)` the client already has `h(CD)` from step #1, so it needs `h(AB)`.
 3. For `h(ABCDEFG)` the client has `h(ABCD)` from step #2 and now needs `h(EFG)`.
 
-The root node is always present in a Roughtime reply. A Merkle Tree path is included only when a response
-covers more than one request. In our example, client C
-needs 3 nodes from the tree: `h(D)`, `h(AB)`, and `h(EFG)` to verify its request. 
+So the path in the reply to client C is `h(D)`, `h(AB)`, and `h(EFG)`.
 
 Being a complete tree, the number of path elements required by each client is bounded at `ceil(log2(batch size))`. 
 In the case of a 64 request batch `log2(64) == 6` and `6 * 64 bytes per sha512 == 384 bytes`. This is how
