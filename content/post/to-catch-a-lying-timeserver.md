@@ -38,13 +38,32 @@ Let's explore some of these points in detail.
 # Scalable Public Key Signatures
 
 Roughtime signs responses using the [Ed25519](https://ed25519.cr.yp.to/) public-key signature system. 
-Ed25519 signatures are quite fast, [eBATS](https://bench.cr.yp.to/results-sign.html) results show that 
-an Intel Skylake chip completes an Ed25519 signature in about ~49,000 cycles. Assuming a 3.0 GHz 
-clock speed that's ~61,225 signatures per-second on a single core. 
+Ed25519 signatures are quite fast: [eBATS](https://bench.cr.yp.to/results-sign.html) shows 
+an Intel Skylake CPU completes an Ed25519 signature in about ~49,000 cycles. Assuming a 3.0 GHz 
+clock speed that's ~61,225 signatures per second on a single core.
 
-Roughtime can sign batches of requests at once
+To scale the signing workload, Roughtime uses a [Merkle Tree](https://en.wikipedia.org/wiki/Merkle_tree) 
+to sign a **batch** of client requests with a single signature operation. With a batch size of 64
+a single 3.0 GHz Skylake core can sign **3.9 million** requests per second. 
 
-# Anti-Amplification and Request/Response Rate Asymmetry 
+What about the non-signature processing and overhead needed to create responses? Reply payloads need to 
+be built and those packets sent to clients after all. Roughtime is designed in a way that enables 
+almost all of the non-signature processing to be re-used for all replies of a single batch; ergo 
+"compute once, reply many times".
+
+# Anti-Amplification and Request/Response Size Asymmetry 
+
+All Roughtime requests are required to be at least 1024 bytes long and any request
+less than 1024 bytes is simply dropped. Why? To ensure that a Roughtime server cannot be used as 
+a [DDoS amplifier](https://www.incapsula.com/ddos/attack-glossary/ntp-amplification.html). 
+
+|     | Size (bytes) |
+| ----- | -----:|
+| **Request** size | 1024 |
+| **Response** size, single request | 360 |
+| **Response** size, batch 64 requests | 744 |
+
+
 
 If batches of 64 requests are allowed then a Skylake chip can sign 4.3 million requests per core-second.
 
