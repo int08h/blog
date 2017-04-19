@@ -1,7 +1,7 @@
 +++
 date = "2017-04-13T14:06:58-05:00"
 title = "Scalable Lie-Detecting Timeserving with Roughtime"
-hidefromhome = true
+hidefromhome = "true"
 
 +++
 
