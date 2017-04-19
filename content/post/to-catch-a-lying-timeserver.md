@@ -35,6 +35,15 @@ Roughtime attempts to address these shortcomings. Briefly, its design goals are:
 
 Let's explore some of these points in detail.
 
+# Scalable Public Key Signatures
+
+Roughtime signs responses using the [Ed25519](https://ed25519.cr.yp.to/) public-key signature system. 
+Ed25519 signatures are quite fast, [eBATS](https://bench.cr.yp.to/results-sign.html) results show that 
+an Intel Skylake chip completes an Ed25519 signature in about ~49,000 cycles. Assuming a 3.0 GHz 
+clock speed that's ~61,225 signatures per-second on a single core. 
+
+Roughtime can sign batches of requests at once
+
 # Anti-Amplification and Request/Response Rate Asymmetry 
 
 If batches of 64 requests are allowed then a Skylake chip can sign 4.3 million requests per core-second.
@@ -50,7 +59,6 @@ Response size ex-path data : 360 bytes
    64 depth tree path data : 384 bytes
             Response Total : 744 bytes
 
-# Efficient Public Key Signatures
 
 # Amortizng Signature Costs
 Sending request to roughtime.sandbox.google.com/173.194.202.158:2002
