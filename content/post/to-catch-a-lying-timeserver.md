@@ -15,9 +15,11 @@ Many aspects of day-to-day computing assume an accurate local clock. Not just yo
 reminders and iMessage timestamps: assumptions of correct local time can be security-critical such as in 
 certificate expiry and Kerberos tickets. 
 
-The current dominant time-sync protocol, Network Time Protocol (NTP), is 
-unauthenticated[^1] and most clients blindly trust any reply (`pool.ntp.org` anyone?). 
-Should a client find that an NTP server is responding with bad time values there's no way to prove to others that a particular server is a bad actor[^2]. Finally NTP has some (mis)features that can be abused to create DDoS traffic.
+The dominant internet time-sync protocol, Network Time Protocol (NTP), is showing its age:
+
+1. It is unauthenticated[^1] and most clients blindly trust any reply (`pool.ntp.org` anyone?). 
+2. Should a client find that an NTP server is responding with bad values there's no way to prove to others that a particular server is a bad actor[^2].
+3. NTP has some (mis)features that can be abused to create DDoS traffic.
 
 [^1]: Yes, there are [authentication mechanisms](https://tools.ietf.org/html/rfc5906) in NTPv4 as well as in-development NTP/PTP authentication protocols like [NTS](https://tools.ietf.org/html/draft-ietf-ntp-network-time-security-14). None of these have seen widespread deployment on the public internet, in mobile devices, or as out-of-the-box OS defaults. Furthermore these solutions require that clients unconditionally trust one or move servers. 
 
@@ -27,22 +29,21 @@ Should a client find that an NTP server is responding with bad time values there
 
 Roughtime attempts to address these shortcomings. Paraphrasing its design goals:
 
-1. **Seconds accuracy** -- The protocol aims to get local clocks within a few seconds of the "true" time. The Roughtime creators point out that [25% of Chrome's certificate errors](https://roughtime.googlesource.com/roughtime#Roughstime-2) are caused by *incorrect local clocks*. A local clock within a few seconds of GPS or some other reference time is a sufficient remedy. 
-2. **Secure** -- Roughtime servers sign every reply and that signature can be verified by any client. Clients can build a chain of replies to establish proof of server misbehavior. This proof is also verifiable by any client. No central trust is required.
+1. **Seconds accuracy** -- The protocol aims to get local clocks within a few seconds of the "true" time. The Roughtime creators point out that [25% of Chrome's certificate errors](https://roughtime.googlesource.com/roughtime#Roughstime-2) are caused by *incorrect local clocks*. A local clock within a few seconds of GPS or some other reference time is a sufficient remedy. The designers make clear that NTP and PTP are preferred if more precision is required.
+2. **Secure** -- Roughtime servers sign every reply and the signature is verifiable by any client. Clients can build a chain of replies to establish proof of server misbehavior. This proof is also verifiable by any client. No central trust is required.
 3. **Internet scalable** -- The protocol is stateless and built upon efficient and batchable operations. The network layer is constructed to prevent DDoS amplification. 
 4. **Healthy ecosystem** -- Roughtime includes mechanisms for ensuring "freshness" of clients and correctness of their implementations. The intent is to surface bugs quickly and mitigate abusive client practices[^3].
 
-[^3]: See https://en.wikipedia.org/wiki/NTP_server_misuse_and_abuse
+[^3]: See [NTP Server Misuse and Abuse](https://en.wikipedia.org/wiki/NTP_server_misuse_and_abuse)
 
 Bellow I'll explore some of the interesting aspects of Roughtime that may not be immediately obvious. 
 
 # Scalable Public Key Signatures
 
 Roughtime signs responses using the [Ed25519](https://ed25519.cr.yp.to/) public-key signature system. 
-Ed25519 signatures are quite fast: [eBATS](https://bench.cr.yp.to/results-sign.html) shows 
-an Intel Skylake CPU completes an Ed25519 signature in about ~49,000 cycles. Assuming a 3.0 GHz 
-clock speed that's ~61,225 signatures per second on a single core. They are also compact: each 
-Ed25519 signature is 64 bytes.
+Ed25519 signatures are quite fast: according to [eBATS](https://bench.cr.yp.to/results-sign.html) 
+an Intel Skylake CPU takes about ~49,000 cycles to compute an Ed25519 signature. Assuming a 3.0 GHz 
+clock speed that's ~61,000 signatures per second on a single core. Signatures are also compact: 64 bytes each.
 
 To scale the signing workload, Roughtime uses a [Merkle Tree](https://en.wikipedia.org/wiki/Merkle_tree) 
 to sign a **batch** of client requests with a single signature operation (the root of the tree is signed).
@@ -55,8 +56,7 @@ almost all of the non-signature processing to be re-used for all replies of a si
 
 # Anti-Amplification and Request/Response Size Asymmetry 
 
-All Roughtime requests are required to be at least 1024 bytes long and any request
-less than 1024 bytes is simply dropped. Why? To ensure that a Roughtime server cannot be used as 
+All Roughtime requests are required to be at least 1024 bytes long and any request shorter is simply dropped. Why? To ensure that a Roughtime server cannot be used as 
 a [DDoS amplifier](https://www.incapsula.com/ddos/attack-glossary/ntp-amplification.html). 
 
 | Message    | Size (bytes) |
@@ -71,12 +71,14 @@ requests per second. As shown above, that rate is easily handled by a single Sky
 
 # Signature Size
 
-You probably noticed above that a response to 64 requests is suspiciously small: 744 bytes. This is not 
+You probably noticed that the response for 64 requests is suspiciously small: 744 bytes. This is not 
 a typo, recall that Roughtime uses a Merkle Tree to batch requests. When replying to clients, Roughtime
 sends only the tree nodes each client needs to verify its request is included in the tree. Roughtime does 
-not send the whole tree.
+not send the whole tree[^4].
 
-An example might help illustrate. We'll work with this Merkle Tree which batches 7 requests:
+[^4]: This elegant idea shows up in [many](https://www.certificate-transparency.org/log-proofs-work) [other](https://blog.ethereum.org/2015/11/15/merkling-in-ethereum/) [places](https://petertodd.org/2016/opentimestamps-announcement).
+
+An example might help. We'll work with this Merkle Tree that batches 7 requests, `A` though `G`:
 
 ```text
               _____ h(ABCDEFG) ______            
@@ -90,19 +92,19 @@ An example might help illustrate. We'll work with this Merkle Tree which batches
 h(...) = SHA512
 ```
 
-Let's imagine constructing a response to client `C`:
+Imagine constructing a response to client C:
 
-1. To compute `h(CD)` the client needs `D` (client `C` remembers what is sent, so no need to send `C`).
+1. To compute `h(CD)` the client needs `D` (client C remembers what it sent).
 2. To compute `h(ABCD)` the client already has `h(CD)` from step #1, so it needs `h(AB)`.
 3. For `h(ABCDEFG)` the client has `h(ABCD)` from step #2 and now needs `h(EFG)`.
 
 The root node is always present in a Roughtime reply. A Merkle Tree path is included only when a response
-covers more than one request. In our example, to verify its request client `C` 
-needs only 3 nodes: `[h(D), h(AB), h(EFG)]`. 
+covers more than one request. In our example, client C
+needs 3 nodes from the tree: `h(D)`, `h(AB)`, and `h(EFG)` to verify its request. 
 
-Being a balanced tree, the number of path elements is bounded as `ceil(log2(batch size))`. 
+Being a complete tree, the number of path elements required by each client is bounded at `ceil(log2(batch size))`. 
 In the case of a 64 request batch `log2(64) == 6` and `6 * 64 bytes per sha512 == 384 bytes`. This is how
-we arrive at 744 bytes for a 64-element batch response: 360 bytes response + 384 bytes path data =
+we arrive at 744 bytes for a 64-element batch response: 360 bytes response + 384 bytes tree path data =
 744 bytes total.
 
 
