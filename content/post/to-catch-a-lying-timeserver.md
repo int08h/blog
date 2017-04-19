@@ -30,11 +30,11 @@ Roughtime attempts to address these shortcomings. Paraphrasing its design goals:
 1. **Seconds accuracy** -- The protocol aims to get local clocks within a few seconds of the "true" time. The Roughtime creators point out that [25% of Chrome's certificate errors](https://roughtime.googlesource.com/roughtime#Roughstime-2) are caused by *incorrect local clocks*. A local clock within a few seconds of GPS or some other reference time is a sufficient remedy. 
 2. **Secure** -- Roughtime servers sign every reply and that signature can be verified by any client. Clients can build a chain of replies to establish proof of server misbehavior. This proof is also verifiable by any client. No central trust is required.
 3. **Internet scalable** -- The protocol is stateless and built upon efficient and batchable operations. The network layer is constructed to prevent DDoS amplification. 
-4. **Healthy ecosystem** -- Roughtime includes mechanisms for ensuring "freshness" of clients and correctness of their implementations. The intent is to surface bugs quickly and mitigate address hard-coding and other abusive client practices[^3].
+4. **Healthy ecosystem** -- Roughtime includes mechanisms for ensuring "freshness" of clients and correctness of their implementations. The intent is to surface bugs quickly and mitigate abusive client practices[^3].
 
 [^3]: See https://en.wikipedia.org/wiki/NTP_server_misuse_and_abuse
 
-Let's explore some of these points in detail.
+Bellow I'll explore some of the interesting aspects of Roughtime that may not be immediately obvious. 
 
 # Scalable Public Key Signatures
 
@@ -71,8 +71,8 @@ requests per second. As shown above, that rate is easily handled by a single Sky
 
 # Signature Size
 
-You probably noticed above that a response to 64 requests is supiciously small, 744 bytes. This is not 
-a typo: recall that Roughtime uses a Merkle Tree to batch requests. When replying to clients, Roughtime
+You probably noticed above that a response to 64 requests is suspiciously small: 744 bytes. This is not 
+a typo, recall that Roughtime uses a Merkle Tree to batch requests. When replying to clients, Roughtime
 sends only the tree nodes each client needs to verify its request is included in the tree. Roughtime does 
 not send the whole tree.
 
@@ -92,12 +92,12 @@ h(...) = SHA512
 
 Let's imagine constructing a response to client `C`:
 
-1. To compute `h(CD)` the client needs `D` (client `C` remembers what is sent us, so no need to send `C`).
+1. To compute `h(CD)` the client needs `D` (client `C` remembers what is sent, so no need to send `C`).
 2. To compute `h(ABCD)` the client already has `h(CD)` from step #1, so it needs `h(AB)`.
 3. For `h(ABCDEFG)` the client has `h(ABCD)` from step #2 and now needs `h(EFG)`.
 
 The root node is always present in a Roughtime reply. A Merkle Tree path is included only when a response
-covers more than one request. In our example of a response to client `C`, to verify its request client `C` 
+covers more than one request. In our example, to verify its request client `C` 
 needs only 3 nodes: `[h(D), h(AB), h(EFG)]`. 
 
 Being a balanced tree, the number of path elements is bounded as `ceil(log2(batch size))`. 
