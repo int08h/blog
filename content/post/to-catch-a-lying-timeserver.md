@@ -40,14 +40,15 @@ Let's explore some of these points in detail.
 Roughtime signs responses using the [Ed25519](https://ed25519.cr.yp.to/) public-key signature system. 
 Ed25519 signatures are quite fast: [eBATS](https://bench.cr.yp.to/results-sign.html) shows 
 an Intel Skylake CPU completes an Ed25519 signature in about ~49,000 cycles. Assuming a 3.0 GHz 
-clock speed that's ~61,225 signatures per second on a single core.
+clock speed that's ~61,225 signatures per second on a single core. They are also compact: each 
+Ed25519 signature is 64 bytes.
 
 To scale the signing workload, Roughtime uses a [Merkle Tree](https://en.wikipedia.org/wiki/Merkle_tree) 
-to sign a **batch** of client requests with a single signature operation. With a batch size of 64
-a single 3.0 GHz Skylake core can sign **3.9 million** requests per second. 
+to sign a **batch** of client requests with a single signature operation (the root of the tree is signed).
+With a batch size of 64 a single 3.0 GHz Skylake core can sign **3.9 million** requests per second. 
 
-What about the non-signature processing and overhead needed to create responses? Reply payloads need to 
-be built and those packets sent to clients after all. Roughtime is designed in a way that enables 
+What about the non-signature processing and overhead needed to create responses? 
+Roughtime is designed in a way that enables 
 almost all of the non-signature processing to be re-used for all replies of a single batch; ergo 
 "compute once, reply many times".
 
@@ -57,13 +58,54 @@ All Roughtime requests are required to be at least 1024 bytes long and any reque
 less than 1024 bytes is simply dropped. Why? To ensure that a Roughtime server cannot be used as 
 a [DDoS amplifier](https://www.incapsula.com/ddos/attack-glossary/ntp-amplification.html). 
 
-|     | Size (bytes) |
+| Message    | Size (bytes) |
 | ----- | -----:|
-| **Request** size | 1024 |
-| **Response** size, single request | 360 |
-| **Response** size, batch 64 requests | 744 |
+| Roughtime **Request**  | 1024 |
+| Roughtime **Response**, single request | 360 |
+| Roughtime **Response**, batch of 64 requests | 744 |
+
+The 1 KiB request size ensures an attacker has a negative return on any traffic sent to a Roughtime server.
+It also naturally rate-limits requests: at 1 KiB per request a 10 Gbps link can deliver a maximum of 1.2 million
+requests per second. As shown above, that rate is easily handled by a single Skylake core.
+
+# Signature Size
+
+You probably noticed above that a response to 64 requests is supiciously small, 744 bytes. This is not 
+a typo: recall that Roughtime uses a Merkle Tree to batch requests. When replying to clients, Roughtime
+sends only the tree nodes each client needs to verify its request is included in the tree. Roughtime does 
+not send the whole tree.
+
+An example might help illustrate. We'll work with this Merkle Tree which batches 7 requests:
+
+```text
+              _____ h(ABCDEFG) ______            
+             /                       \
+         h(ABCD)                   h(EFG)
+       /         \                /      \
+   h(AB)         h(CD)         h(EF)      \
+   /   \         /   \         /   \       \
+ h(A)  h(B)    h(C)  h(D)    h(E)  h(F)   h(G)
+
+h(...) = SHA512
+```
+
+Let's imagine constructing a response to client `C`:
+
+1. To compute `h(CD)` the client needs `D` (client `C` remembers what is sent us, so no need to send `C`).
+2. To compute `h(ABCD)` the client already has `h(CD)` from step #1, so it needs `h(AB)`.
+3. For `h(ABCDEFG)` the client has `h(ABCD)` from step #2 and now needs `h(EFG)`.
+
+The root node is always present in a Roughtime reply. A Merkle Tree path is included only when a response
+covers more than one request. In our example of a response to client `C`, to verify its request client `C` 
+needs only 3 nodes: `[h(D), h(AB), h(EFG)]`. 
+
+Being a balanced tree, we know the number of path elements is bounded as `ceil(log2(batch size))`. 
+In the case of a 64 request batch `log2(64) == 6` and `6 * 64 bytes per sha512 == 384 bytes`. This is how
+we arrive at 744 bytes for a 64-element batch response: 360 bytes response + 384 bytes path data =
+744 bytes total.
 
 
+# Blah Blah
 
 If batches of 64 requests are allowed then a Skylake chip can sign 4.3 million requests per core-second.
 
