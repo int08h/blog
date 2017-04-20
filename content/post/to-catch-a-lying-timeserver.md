@@ -6,35 +6,36 @@ hidefromhome = "true"
 +++
 
 [Roughtime](https://roughtime.googlesource.com/roughtime/) is a new(-ish) protocol 
-designed to provide internet-scale secure time synchronization. Designed by Googlers, it
-aims to address shortcomings of how NTP is typically used in the wild.
+designed to provide internet-scale secure time synchronization. It
+aims to address shortcomings of how time sync is typically used in the wild.
 
 # Why This Is Important
 
-Many aspects of day-to-day computing assume an accurate local clock. Not just your appointment
-reminders and iMessage timestamps: assumptions of correct local time can be security-critical such as in 
-certificate expiry and Kerberos tickets. 
+Many aspects of day-to-day computing assume an accurate local clock. Those assumptions of correct local time extend to security-critical operations like 
+certificate expiry, OSCP stapling, and Kerberos tickets. 
 
 The dominant internet time-sync protocol, Network Time Protocol (NTP), is showing its age:
 
 1. It is unauthenticated[^1] and most clients blindly trust any reply (`pool.ntp.org` anyone?). 
-2. Should a client find that an NTP server is responding with bad values there's no way to prove to others that a particular server is a bad actor[^2].
-3. NTP has some (mis)features that can be abused to create DDoS traffic.
+2. Clients that find an NTP server responding with bad values have no way to prove to others that a particular server is a bad actor[^2].
+3. NTP has protocol (mis)features that can be abused to create DDoS traffic[^3].
 
-[^1]: Yes, there are [authentication mechanisms](https://tools.ietf.org/html/rfc5906) in NTPv4 as well as in-development NTP/PTP authentication protocols like [NTS](https://tools.ietf.org/html/draft-ietf-ntp-network-time-security-14). None of these have seen widespread deployment on the public internet, in mobile devices, or as out-of-the-box OS defaults. Furthermore these solutions require that clients unconditionally trust one or move servers. 
+[^1]: Yes, there are [authentication mechanisms](https://tools.ietf.org/html/rfc5906) in NTPv4 as well as in-development NTP/PTP authentication protocols like [NTS](https://tools.ietf.org/html/draft-ietf-ntp-network-time-security-14). None of these have seen widespread deployment on the public internet, in mobile devices, or as out-of-the-box OS defaults. Furthermore these solutions require that clients unconditionally trust one or move servers and/or require computationally expensive handshakes.  
 
-[^2]: Sure you could capture packets or somesuch but that doesn't actually prove anything...packets are easy spoofed after all.
+[^2]: "Proof" in this case being a cryptographically secure record that can be audited by an untrusted third party. Think spiritual cousin of [certificate transparency](https://www.certificate-transparency.org/). 
+
+[^3]: Granted correctly configured NTP servers will not have these issues...and all internet accessible devices are always correctly configured, right?
 
 # Roughtime Goals
 
 Roughtime attempts to address these shortcomings. Paraphrasing its design goals:
 
-1. **Seconds accuracy** -- The protocol aims to get local clocks within a few seconds of the "true" time. The Roughtime creators point out that [25% of Chrome's certificate errors](https://roughtime.googlesource.com/roughtime#Roughstime-2) are caused by *incorrect local clocks*. A local clock within a few seconds of GPS or some other reference time is a sufficient remedy. The designers make clear that NTP and PTP are preferred if more precision is required.
+1. **Seconds accuracy** -- The protocol aims to get local clocks within a few seconds of the "true" time. The Roughtime creators state that [25% of Chrome's certificate errors](https://roughtime.googlesource.com/roughtime#Roughstime-2) are caused by [incorrect local clocks](https://groups.google.com/a/chromium.org/forum/#!msg/security-dev/oj2xXq3CF0E/f7BtsfkVhe8J) (days off or more). A local clock within a few seconds of reference time is good enough.
 2. **Secure** -- Roughtime servers sign every reply and the signature is verifiable by any client. Clients can build a chain of replies to establish proof of server misbehavior. This proof is also verifiable by any client. No central trust is required.
 3. **Internet scalable** -- The protocol is stateless and built upon efficient and batchable operations. The network layer is constructed to prevent DDoS amplification. 
-4. **Healthy ecosystem** -- Roughtime includes mechanisms for ensuring "freshness" of clients and correctness of their implementations. The intent is to surface bugs quickly and mitigate abusive client practices[^3].
+4. **Healthy ecosystem** -- Roughtime includes mechanisms for ensuring "freshness" of clients and correctness of their implementations. The intent is to surface bugs quickly and mitigate abusive client practices[^4].
 
-[^3]: See [NTP Server Misuse and Abuse](https://en.wikipedia.org/wiki/NTP_server_misuse_and_abuse)
+[^4]: See [NTP Server Misuse and Abuse](https://en.wikipedia.org/wiki/NTP_server_misuse_and_abuse)
 
 Bellow I'll explore some of the interesting aspects of Roughtime that may not be immediately obvious. 
 
@@ -49,58 +50,56 @@ To scale the signing workload, Roughtime uses a [Merkle Tree](https://en.wikiped
 to sign a **batch** of client requests with a single signature operation (the root of the tree is signed).
 With a batch size of 64 a single 3.0 GHz Skylake core can sign **3.9 million** requests per second. 
 
-What about the processing and overhead needed to create responses? 
-The bulk of the response processing can be reused for all replies in a single batch[^4]. Ergo "sign once, reply many times".
+An additional design feature helps limit per-client processing: the non-client specific parts of a response are **identical** for all replies in a single batch[^5]. Servers can calculate these values once and re-use them in each reply. 
 
-[^4]: Details: only the `PATH` and `INDX` tags vary client-to-client. The `SIG`, `SREP`, and `CERT` tags will be identical in all responses. 
+[^5]: Specifically only the `PATH` and `INDX` tags vary client-to-client. The `SIG`, `SREP`, and `CERT` tags will be identical in all responses. 
 
 # Anti-Amplification and Request/Response Size Asymmetry 
 
 All Roughtime requests are required to be at least 1024 bytes long and any request shorter is simply dropped. Why? To ensure that a Roughtime server cannot be used as 
 a [DDoS amplifier](https://www.incapsula.com/ddos/attack-glossary/ntp-amplification.html). 
 
-| Message    | Size (bytes) |
+| Roughtime Message    | Size (bytes) |
 | ----- | -----:|
-| Roughtime **Request**  | 1024 |
-| Roughtime **Response**, single request | 360 |
-| Roughtime **Response**, batch of 64 requests | 744 |
+| Client Request  | 1024 |
+| Server Response to a single request | 360 |
+| Server Response when batching 64 requests | 744 |
 
-The 1 KiB request size ensures an attacker has a negative return on any traffic sent to a Roughtime server.
-It also naturally rate-limits requests: at 1 KiB per request a 10 Gbps link can deliver a maximum of 1.2 million
+The 1 KiB request size ensures an attacker has no gain on any traffic sent to a Roughtime server; replies are always smaller than requests, even under load (when batching responses).
+
+This also naturally rate-limits requests: at 1 KiB per request a 10 Gbps link can deliver a maximum of 1.2 million
 requests per second. As shown above, that rate is easily handled by a single Skylake core.
 
-# Signature Size
+# Compact Response Sizes
 
-You probably noticed that the response for 64 requests is suspiciously small: 744 bytes. This is not 
-a typo, recall that Roughtime uses a Merkle Tree to batch requests. When replying to clients, Roughtime
-sends only the tree nodes each client needs to verify its request is included in the tree[^5]. Roughtime does 
-not send the whole tree.
+You probably noticed that the response size when batching 64 requests is suspiciously small: 744 bytes. This is not 
+a typo. Recall that Roughtime uses a Merkle Tree of client requests to construct its batched response. A Roughtime server does not send the whole tree when replying to clients; it sends only those nodes each client needs to verify that its request was included in the tree[^6]. 
 
-[^5]: This elegant idea shows up in [many](https://www.certificate-transparency.org/log-proofs-work) [other](https://blog.ethereum.org/2015/11/15/merkling-in-ethereum/) [places](https://petertodd.org/2016/opentimestamps-announcement).
+[^6]: This elegant idea shows up in [many](https://www.certificate-transparency.org/log-proofs-work) [other](https://blog.ethereum.org/2015/11/15/merkling-in-ethereum/) [places](https://petertodd.org/2016/opentimestamps-announcement).
 
-An example might help. We'll work with this Merkle Tree that batches 7 requests, `A` though `G`:
+An example might help. Consider this idealized Merkle Tree constructed from 7 requests, `A` though `G`:
 
 ```text
               _____ h(ABCDEFG) ______            
              /                       \
          h(ABCD)                   h(EFG)
        /         \                /      \
-   h(AB)         h(CD)         h(EF)      \
-   /   \         /   \         /   \       \
- h(A)  h(B)    h(C)  h(D)    h(E)  h(F)   h(G)
+   h(AB)         h(CD)         h(EF)     h(G)
+   /   \         /   \         /   \
+ h(A)  h(B)    h(C)  h(D)    h(E)  h(F)
 
 h(...) = SHA512
 ```
 
 Imagine constructing a response to client C:
 
-1. To compute `h(CD)` the client needs `D` (client C remembers what it sent).
+1. To compute `h(CD)` the client needs `D` (client C remembers the `C` it sent).
 2. To compute `h(ABCD)` the client already has `h(CD)` from step #1, so it needs `h(AB)`.
-3. For `h(ABCDEFG)` the client has `h(ABCD)` from step #2 and now needs `h(EFG)`.
+3. For `h(ABCDEFG)` the client has `h(ABCD)` from step #2 and needs `h(EFG)`.
 
-So the path in the reply to client C is `h(D)`, `h(AB)`, and `h(EFG)`.
+So the path sent to client C is `h(D)`, `h(AB)`, and `h(EFG)`.
 
-Being a complete tree, the number of path elements required by each client is bounded at `ceil(log2(batch size))`. 
+Being a [complete tree](http://web.cecs.pdx.edu/~sheard/course/Cs163/Doc/FullvsComplete.html), the number of path elements required by each client is bounded at `ceil(log2(batch size))`. 
 In the case of a 64 request batch `log2(64) == 6` and `6 * 64 bytes per sha512 == 384 bytes`. This is how
 we arrive at 744 bytes for a 64-element batch response: 360 bytes response + 384 bytes tree path data =
 744 bytes total.
