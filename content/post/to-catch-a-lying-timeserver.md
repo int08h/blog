@@ -82,13 +82,13 @@ a typo. Recall that Roughtime uses a Merkle Tree of client requests to construct
 An example might help. Consider this idealized Merkle Tree constructed from 7 requests, `A` though `G`:
 
 ```text
-              _____ h(ABCDEFG) ______            
-             /                       \
-         h(ABCD)                   h(EFG)
-       /         \                /      \
-   h(AB)         h(CD)         h(EF)     h(G)
-   /   \         /   \         /   \
- h(A)  h(B)    h(C)  h(D)    h(E)  h(F)
+             _____ h(ABCDEFG) _____            
+            /                      \
+       h(ABCD)                    h(EFG)
+      /       \                   /     \
+   h(AB)       h(CD)           h(EF)     h(G)
+   /   \       /   \           /   \
+ h(A)  h(B)  h(C)  h(D)      h(E)  h(F)
 
 h(...) = SHA512
 ```
