@@ -5,12 +5,11 @@ description = "A look at Roughtime, an internet-scale secure time synchronizatio
 
 +++
 
-[Roughtime](https://roughtime.googlesource.com/roughtime/) is a new protocol 
-designed to provide internet-scale secure time synchronization while addressing shortcomings of how time sync is typically used in the wild.
+[Roughtime](https://roughtime.googlesource.com/roughtime/) is a protocol designed to provide internet-scale secure time synchronization and address shortcomings of how time sync is typically used in the wild.
 
 # Why This Is Important
 
-Many aspects of day-to-day computing assume an accurate local clock. These assumptions extend to security-critical operations like 
+Many aspects of day-to-day computing assume an accurate local clock. This assumption extends to security-critical operations like 
 certificate expiry, OSCP stapling, and Kerberos tickets. An attacker that subverts time sync could violate the security of these operations.
 
 The dominant internet time-sync protocol, Network Time Protocol (NTP), is showing its age. Amongst other things:
@@ -61,11 +60,11 @@ clock speed that's ~61,000 signatures per second on a single core. Signatures ar
 
 To scale the signing workload, Roughtime uses a [Merkle Tree](https://en.wikipedia.org/wiki/Merkle_tree) 
 to sign a **batch** of client requests with a single signature operation. The **root** of the tree is signed and included in all responses.
-With a batch size of 64[^5] a single 3.0 GHz Skylake core can sign **3.9 million** requests per second. 
+With a batch size[^5] of 64 a single 3.0 GHz Skylake core can sign **3.9 million** requests per second. 
 
 [^5]: Batching sizes are not part of the specification. 64 is used as it makes a convenient example and corresponds to a reasonable UDP buffer size (64 KiB).
 
-An additional design feature helps limit per-client processing: the non-client specific parts of a response are **identical** for all replies in a single batch[^6]. Servers can calculate these values once and re-use them in each reply. 
+Another design feature helps limit per-client processing: the non-client-specific parts of a response are **identical** for all replies in a single batch[^6]. Servers can calculate these values once and re-use them in each reply. 
 
 [^6]: Specifically only the `PATH` and `INDX` tags vary response-to-response. The `SIG`, `SREP`, and `CERT` tags will be identical in all responses. 
 
@@ -90,7 +89,7 @@ requests per second. As shown above, that rate is easily handled by a single Sky
 You probably noticed the response size when batching 64 requests is suspiciously small: 744 bytes. This is not 
 a typo. 
 
-Recall that Roughtime uses a Merkle Tree of client requests to construct its batched response. A Roughtime server does not send the whole tree when replying to clients; it sends only those nodes each client needs to verify that its request was included in the tree[^7]. 
+Recall that Roughtime uses a Merkle Tree of client requests to construct its batched response. A Roughtime server does not send the whole tree when replying to clients. It sends the signed root plus *only* those nodes each client needs to verify that its request was included in the tree[^7]. 
 
 [^7]: This elegant idea shows up in [many](https://www.certificate-transparency.org/log-proofs-work) [other](https://blog.ethereum.org/2015/11/15/merkling-in-ethereum/) [places](https://petertodd.org/2016/opentimestamps-announcement).
 
@@ -116,8 +115,7 @@ Imagine constructing a response to client C that needs to verify its request `C`
 
 So the path sent to client C is `h(D)`, `h(AB)`, and `h(EFG)`.
 
-Being a [complete tree](http://web.cecs.pdx.edu/~sheard/course/Cs163/Doc/FullvsComplete.html), the maximum number of path elements required by a client is bounded at `ceil(log2(batch size))`. 
-In the case of a 64 request batch `log2(64) == 6` and `6 * 64 bytes per sha512 == 384 bytes`. This is how
+Being a [complete tree](http://web.cecs.pdx.edu/~sheard/course/Cs163/Doc/FullvsComplete.html), the maximum number of path elements required by a client is bounded at `ceil(log2(batch size))`. In the case of a 64 request batch `log2(64) == 6` and `6 * 64 bytes per sha512 == 384 bytes`. This is how
 we arrive at 744 bytes for a 64-element batch response: 360 bytes response + 384 bytes tree path data =
 744 bytes total.
 
@@ -127,25 +125,26 @@ Now to examine how request/response chaining allows clients to detect misbehavin
 
 {{< figure src="/images/roughtime_chaining.png" link="/images/roughtime_chaining.png" caption="Roughtime request/response chaining (click to enlarge)" class="figshrink" >}}
 
-Proof of server misbehavior emerges from three interlocking properties of the protocol: 
+Proof of server misbehavior emerges from two interlocking properties of the protocol: 
 
-1. **Chaining establishes total ordering between all request/responses.** Composing requests using prior responses establishes a single sequence of events that can be independently verified. That is, since nonce `B` is derived from `A`, we can be certain that response `B'` (and the time associated with it) came *after* response `A'` (and its time).
-2. **Each response contains the client's nonce and server's time.** Given that the chained nonce is present alongside the server's attested time, this creates a total ordering of all time values provided by a server. 
-3. **All responses are cryptographically signed.** Signatures establish authenticity of responses, identity of senders, and prevent forgery. 
+1. **Chaining establishes total ordering between all request/responses.** Composing requests using prior responses establishes a single sequence of events that can be independently verified. 
+2. **All responses are cryptographically signed.** Signatures establish authenticity of responses, identity of senders, and prevent forgery. 
 
-With three or more servers the client has sufficient cross-signed request/responses to identify a bad server. In the case of only two servers, a client can detect misbehavior exists but not which server is bad. 
+A client sending nonce `B` which was derived from `A` can be certain that response `B'` (and the time associated with it) came *after* response `A'` (and its associated time). If the client sees a time in response `B'` that is before the time in `A'` then something is obviously wrong.
 
-It is envisioned that Roughtime clients maintain a file of request/responses chains as evidence. These files could be provided to an audit service or other third-party. This [protobuf definition](https://roughtime.googlesource.com/roughtime/+/master/config.proto#40) from the Roughtime project is intended as the standard JSON format for chain files.
+By querying several servers (assuming no collusion) a client can identify not only ordering issues but also time quality problems. One server reporting a time way off the others will be obvious and the collection of cross-signed request/responses will supply proof.
+
+A client can store a log of request and response chains. There are no secret values in Roughtime requests or responses so this log can provided to an audit service or other third-party. This [protobuf definition](https://roughtime.googlesource.com/roughtime/+/master/config.proto#40) from the Roughtime project is intended as the standard JSON format for such chain files.
 
 # Closing Thoughts
 
-Roughtime is elegant and simple. Several of its features aren't immediately apparent and hopefully this post helps spread the word. I didn't touch on other neat ideas in Roughtime like deliberate [fault injection](https://roughtime.googlesource.com/roughtime/+/HEAD/ECOSYSTEM.md#Maintaining-a-healthy-software-ecosystem) which is worth thinking about.
+Roughtime is elegant and simple but several of its clever features only become apparent after digging in. Hopefully this post helps spread the word. I didn't touch on other neat ideas in Roughtime like deliberate response [fault injection](https://roughtime.googlesource.com/roughtime/+/HEAD/ECOSYSTEM.md#Maintaining-a-healthy-software-ecosystem) or use of [key delegation](https://roughtime.googlesource.com/roughtime/+/HEAD/PROTOCOL.md#Certificates) to limit exposure of long-term keys.
 
-If you're interested in learning more about Roughtime:
+If you're interested in learning more:
 
-* The [project page](https://roughtime.googlesource.com/roughtime/) should be your first stop. The C++ and Go implementations live there.
-* I wrote [Nearenough](https://github.com/int08h/nearenough), a Java implementation of Roughtime. 
-* Two good Hacker News discussions near the time of the initial announcement: [one](https://news.ycombinator.com/item?id=12540941) and 
+* The [project page](https://roughtime.googlesource.com/roughtime/) should be your first stop. The reference C++ and Go implementations live there.
+* I wrote [Nearenough](https://github.com/int08h/nearenough), a Java implementation of Roughtime. It can pretty-print Roughtime messages if you need to do that sort of thing.
+* Two good Hacker News discussions around the time of the initial project announcement: [one](https://news.ycombinator.com/item?id=12540941) and 
 [two](https://news.ycombinator.com/item?id=12599705). 
 
 
