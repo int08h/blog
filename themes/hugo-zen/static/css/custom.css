@@ -330,3 +330,6 @@ header .hr {
  margin-top: 0;
 }
 
+.figshrink img {
+  max-width: 85%;
+}
