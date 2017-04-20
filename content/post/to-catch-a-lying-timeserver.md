@@ -5,14 +5,13 @@ hidefromhome = "true"
 
 +++
 
-[Roughtime](https://roughtime.googlesource.com/roughtime/) is a new(-ish) protocol 
-designed to provide internet-scale secure time synchronization. It
-aims to address shortcomings of how time sync is typically used in the wild.
+[Roughtime](https://roughtime.googlesource.com/roughtime/) is a new protocol 
+designed to provide internet-scale secure time synchronization while addressing shortcomings of how time sync is typically used in the wild.
 
 # Why This Is Important
 
-Important aspects of day-to-day computing assume an accurate local clock. These assumptions extend to security-critical operations like 
-certificate expiry, OSCP stapling, and Kerberos tickets. 
+Many aspects of day-to-day computing assume an accurate local clock. These assumptions extend to security-critical operations like 
+certificate expiry, OSCP stapling, and Kerberos tickets. An attacker that subverts time sync could violate the security of these operations.
 
 The dominant internet time-sync protocol, Network Time Protocol (NTP), is showing its age. Amongst other things:
 
@@ -30,7 +29,7 @@ The dominant internet time-sync protocol, Network Time Protocol (NTP), is showin
 
 Roughtime attempts to address these shortcomings. Paraphrasing its design goals:
 
-1. **Seconds accuracy** -- The protocol aims to get local clocks within a few seconds of the "true" time. The Roughtime creators state that [25% of Chrome's certificate errors](https://roughtime.googlesource.com/roughtime#Roughstime-2) are caused by [incorrect local clocks](https://groups.google.com/a/chromium.org/forum/#!msg/security-dev/oj2xXq3CF0E/f7BtsfkVhe8J) (days off or more). A local clock within a few seconds of reference time is good enough.
+1. **Accuracy in seconds** -- The protocol aims to get local clocks within a few seconds of the "true" time. The Roughtime creators state that [25% of Chrome's certificate errors](https://roughtime.googlesource.com/roughtime#Roughstime-2) are caused by [incorrect local clocks](https://groups.google.com/a/chromium.org/forum/#!msg/security-dev/oj2xXq3CF0E/f7BtsfkVhe8J) (days off or more). A local clock within a few seconds of reference time is good enough.
 2. **Secure** -- Roughtime servers sign every reply and the signature is verifiable by any client. Clients can build a chain of replies to establish proof of server misbehavior. This proof is also verifiable by any client. No central trust is required.
 3. **Internet scalable** -- The protocol is stateless and built upon efficient and batchable operations. The network layer is constructed to prevent DDoS amplification. 
 4. **Healthy ecosystem** -- Roughtime includes mechanisms for ensuring "freshness" of clients and correctness of their implementations. The intent is to surface bugs quickly and mitigate abusive client practices[^4].
@@ -38,6 +37,16 @@ Roughtime attempts to address these shortcomings. Paraphrasing its design goals:
 [^4]: See [NTP Server Misuse and Abuse](https://en.wikipedia.org/wiki/NTP_server_misuse_and_abuse)
 
 Bellow I'll explore some of the interesting aspects of Roughtime that may not be immediately obvious. 
+
+> # Roughtime In a Nutshell
+>   
+> For the unfamiliar, this is an **extremely** abbreviated description of how Roughtime works. The [specification](https://roughtime.googlesource.com/roughtime/+/HEAD/PROTOCOL.md) details the actual protocol.
+>   
+> 1. A brand new client generates a 64 byte random [nonce](https://en.wikipedia.org/wiki/Cryptographic_nonce) and sends it to a Roughtime server.
+> 2. The Roughtime server replies with the current time, the client's nonce, and a signature of both.
+> 3. Subsequent client requests generate the nonce by combining the reply in #2 with a random value (serving as a blind).
+> 
+> Clients know that server responses are A) *fresh* because they include their nonce, and B) *authentic* because they are signed. 
 
 # Scalable Request Processing
 
@@ -67,7 +76,7 @@ a [DDoS amplifier](https://www.incapsula.com/ddos/attack-glossary/ntp-amplificat
 | Server Response to a single request | 360 |
 | Server Response when batching 64 requests | 744 |
 
-The 1 KiB request size requirement ensures an attacker has no gain on any traffic sent to a Roughtime server; replies are always smaller than requests, even under load (when batching responses).
+The 1 KiB request size requirement ensures an attacker has no size gain on traffic sent to a Roughtime server; replies are always smaller than requests, even under load (when batching responses).
 
 This also naturally rate-limits requests: at 1 KiB per request a 10 Gbps link can deliver a maximum of 1.2 million
 requests per second. As shown above, that rate is easily handled by a single Skylake core.
@@ -79,7 +88,7 @@ a typo. Recall that Roughtime uses a Merkle Tree of client requests to construct
 
 [^6]: This elegant idea shows up in [many](https://www.certificate-transparency.org/log-proofs-work) [other](https://blog.ethereum.org/2015/11/15/merkling-in-ethereum/) [places](https://petertodd.org/2016/opentimestamps-announcement).
 
-An example might help. Consider this idealized Merkle Tree constructed from 7 requests, `A` though `G`:
+An example might help. Consider this idealized Merkle Tree constructed from seven requests, `A` though `G`:
 
 ```text
              _____ h(ABCDEFG) _____            
@@ -106,21 +115,8 @@ In the case of a 64 request batch `log2(64) == 6` and `6 * 64 bytes per sha512 =
 we arrive at 744 bytes for a 64-element batch response: 360 bytes response + 384 bytes tree path data =
 744 bytes total.
 
+# Proof of Misconduct
 
-# Blah Blah
-
-If batches of 64 requests are allowed then a Skylake chip can sign 4.3 million requests per core-second.
-
-At that rate, the CPU time for public-key signatures becomes insignificant compared to the work needed to 
-handle that number of packets. Since we require that requests be padded to 1KB to avoid becoming a DDoS 
-amplifier, a 10Gbps network link could only deliver 1.2 million requests per second anyway.
-
-Responses smaller than requests. log2(tree size) means even a batch of 64 signatures the tree
-path sent to client is log2(depth 64) == depth 6 and 6 * 64 bytes == 384 bytes of path data.
-
-Response size ex-path data : 360 bytes
-   64 depth tree path data : 384 bytes
-            Response Total : 744 bytes
 
 
 # Amortizng Signature Costs
