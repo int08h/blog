@@ -1,7 +1,7 @@
 +++
 date = "2017-04-13T14:06:58-05:00"
 title = "Scalable, Lie-Detecting Timeserving with Roughtime"
-hidefromhome = "true"
+description = "A look at Roughtime, an internet-scale secure time synchronization protocol that addresses legacy shortcomings."
 
 +++
 
@@ -116,7 +116,7 @@ Imagine constructing a response to client C that needs to verify its request `C`
 
 So the path sent to client C is `h(D)`, `h(AB)`, and `h(EFG)`.
 
-Being a [complete tree](http://web.cecs.pdx.edu/~sheard/course/Cs163/Doc/FullvsComplete.html), the number of path elements required by each client is bounded at `ceil(log2(batch size))`. 
+Being a [complete tree](http://web.cecs.pdx.edu/~sheard/course/Cs163/Doc/FullvsComplete.html), the maximum number of path elements required by a client is bounded at `ceil(log2(batch size))`. 
 In the case of a 64 request batch `log2(64) == 6` and `6 * 64 bytes per sha512 == 384 bytes`. This is how
 we arrive at 744 bytes for a 64-element batch response: 360 bytes response + 384 bytes tree path data =
 744 bytes total.
@@ -129,20 +129,21 @@ Now to examine how request/response chaining allows clients to detect misbehavin
 
 Proof of server misbehavior emerges from three interlocking properties of the protocol: 
 
-1. **Chaining establishes total ordering between all request/responses.** Composing requests using prior responses establishes a single sequence of events that can be independently verified. That is, since nonce `B` is derived from `A`, we can be certain that response `B'` came *after* response `A'`.
+1. **Chaining establishes total ordering between all request/responses.** Composing requests using prior responses establishes a single sequence of events that can be independently verified. That is, since nonce `B` is derived from `A`, we can be certain that response `B'` (and the time associated with it) came *after* response `A'` (and its time).
 2. **Each response contains the client's nonce and server's time.** Given that the chained nonce is present alongside the server's attested time, this creates a total ordering of all time values provided by a server. 
-3. **All responses are cryptographically signed.** Signatures establish authenticity of responses, identity of senders, and forgery prevention. 
+3. **All responses are cryptographically signed.** Signatures establish authenticity of responses, identity of senders, and prevent forgery. 
 
-In the case of only two servers, a client will be able to detect misbehavior but not which server is bad. With three or more servers the client builds a record of cross-signed request/responses that definitively identifies a bad server.
+With three or more servers the client has sufficient cross-signed request/responses to identify a bad server. In the case of only two servers, a client can detect misbehavior exists but not which server is bad. 
 
-It is envisioned that Roughtime clients would maintain a file of request/responses chains as evidence. These files could be provided to an audit service or other third-party. This [protobuf definition](https://roughtime.googlesource.com/roughtime/+/master/config.proto#40) from the Roughtime project is intended as the standard JSON format for chain files.
+It is envisioned that Roughtime clients maintain a file of request/responses chains as evidence. These files could be provided to an audit service or other third-party. This [protobuf definition](https://roughtime.googlesource.com/roughtime/+/master/config.proto#40) from the Roughtime project is intended as the standard JSON format for chain files.
 
 # Closing Thoughts
 
-Roughtime is elegant and simple. Several of its neatest features aren't immediately apparent, which motivated me to write this. 
+Roughtime is elegant and simple. Several of its features aren't immediately apparent and hopefully this post helps spread the word. I didn't touch on other neat ideas in Roughtime like deliberate [fault injection](https://roughtime.googlesource.com/roughtime/+/HEAD/ECOSYSTEM.md#Maintaining-a-healthy-software-ecosystem) which is worth thinking about.
 
 If you're interested in learning more about Roughtime:
 
+* The [project page](https://roughtime.googlesource.com/roughtime/) should be your first stop. The C++ and Go implementations live there.
 * I wrote [Nearenough](https://github.com/int08h/nearenough), a Java implementation of Roughtime. 
 * Two good Hacker News discussions near the time of the initial announcement: [one](https://news.ycombinator.com/item?id=12540941) and 
 [two](https://news.ycombinator.com/item?id=12599705). 
