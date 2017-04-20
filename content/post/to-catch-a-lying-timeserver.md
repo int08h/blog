@@ -11,14 +11,14 @@ aims to address shortcomings of how time sync is typically used in the wild.
 
 # Why This Is Important
 
-Many aspects of day-to-day computing assume an accurate local clock. Those assumptions of correct local time extend to security-critical operations like 
+Important aspects of day-to-day computing assume an accurate local clock. These assumptions extend to security-critical operations like 
 certificate expiry, OSCP stapling, and Kerberos tickets. 
 
-The dominant internet time-sync protocol, Network Time Protocol (NTP), is showing its age:
+The dominant internet time-sync protocol, Network Time Protocol (NTP), is showing its age. Amongst other things:
 
-1. It is unauthenticated[^1] and most clients blindly trust any reply (`pool.ntp.org` anyone?). 
+1. It is unauthenticated[^1] and most clients blindly trust the reply of any server (`pool.ntp.org` anyone?). 
 2. Clients that find an NTP server responding with bad values have no way to prove to others that a particular server is a bad actor[^2].
-3. NTP has protocol (mis)features that can be abused to create DDoS traffic[^3].
+3. There are protocol (mis)features that can be abused to create DDoS traffic[^3].
 
 [^1]: Yes, there are [authentication mechanisms](https://tools.ietf.org/html/rfc5906) in NTPv4 as well as in-development NTP/PTP authentication protocols like [NTS](https://tools.ietf.org/html/draft-ietf-ntp-network-time-security-14). None of these have seen widespread deployment on the public internet, in mobile devices, or as out-of-the-box OS defaults. Furthermore these solutions require that clients unconditionally trust one or move servers and/or require computationally expensive handshakes.  
 
@@ -39,22 +39,24 @@ Roughtime attempts to address these shortcomings. Paraphrasing its design goals:
 
 Bellow I'll explore some of the interesting aspects of Roughtime that may not be immediately obvious. 
 
-# Scalable Public Key Signatures
+# Scalable Request Processing
 
-Roughtime signs responses using the [Ed25519](https://ed25519.cr.yp.to/) public-key signature system. 
+A Roughtime server signs its responses using the [Ed25519](https://ed25519.cr.yp.to/) public-key signature system. 
 Ed25519 signatures are quite fast: according to [eBATS](https://bench.cr.yp.to/results-sign.html) 
 an Intel Skylake CPU takes about ~49,000 cycles to compute an Ed25519 signature. Assuming a 3.0 GHz 
 clock speed that's ~61,000 signatures per second on a single core. Signatures are also compact: 64 bytes each.
 
 To scale the signing workload, Roughtime uses a [Merkle Tree](https://en.wikipedia.org/wiki/Merkle_tree) 
-to sign a **batch** of client requests with a single signature operation (the root of the tree is signed).
-With a batch size of 64 a single 3.0 GHz Skylake core can sign **3.9 million** requests per second. 
+to sign a **batch** of client requests with a single signature operation. The root of the tree is signed and included in all responses.
+With a batch size of 64[^5] a single 3.0 GHz Skylake core can sign **3.9 million** requests per second. 
 
-An additional design feature helps limit per-client processing: the non-client specific parts of a response are **identical** for all replies in a single batch[^5]. Servers can calculate these values once and re-use them in each reply. 
+[^5]: Batching sizes are not part of the specification. 64 is used as it makes a convenient example and corresponds to a reasonable UDP buffer size (64 KiB).
 
-[^5]: Specifically only the `PATH` and `INDX` tags vary client-to-client. The `SIG`, `SREP`, and `CERT` tags will be identical in all responses. 
+An additional design feature helps limit per-client processing: the non-client specific parts of a response are **identical** for all replies in a single batch[^6]. Servers can calculate these values once and re-use them in each reply. 
 
-# Anti-Amplification and Request/Response Size Asymmetry 
+[^6]: Specifically only the `PATH` and `INDX` tags vary response-to-response. The `SIG`, `SREP`, and `CERT` tags will be identical in all responses. 
+
+# Anti-Amplification Request/Response Size Asymmetry 
 
 All Roughtime requests are required to be at least 1024 bytes long and any request shorter is simply dropped. Why? To ensure that a Roughtime server cannot be used as 
 a [DDoS amplifier](https://www.incapsula.com/ddos/attack-glossary/ntp-amplification.html). 
@@ -65,12 +67,12 @@ a [DDoS amplifier](https://www.incapsula.com/ddos/attack-glossary/ntp-amplificat
 | Server Response to a single request | 360 |
 | Server Response when batching 64 requests | 744 |
 
-The 1 KiB request size ensures an attacker has no gain on any traffic sent to a Roughtime server; replies are always smaller than requests, even under load (when batching responses).
+The 1 KiB request size requirement ensures an attacker has no gain on any traffic sent to a Roughtime server; replies are always smaller than requests, even under load (when batching responses).
 
 This also naturally rate-limits requests: at 1 KiB per request a 10 Gbps link can deliver a maximum of 1.2 million
 requests per second. As shown above, that rate is easily handled by a single Skylake core.
 
-# Compact Response Sizes
+# Keeping Response Sizes Compact
 
 You probably noticed that the response size when batching 64 requests is suspiciously small: 744 bytes. This is not 
 a typo. Recall that Roughtime uses a Merkle Tree of client requests to construct its batched response. A Roughtime server does not send the whole tree when replying to clients; it sends only those nodes each client needs to verify that its request was included in the tree[^6]. 
@@ -91,7 +93,7 @@ An example might help. Consider this idealized Merkle Tree constructed from 7 re
 h(...) = SHA512
 ```
 
-Imagine constructing a response to client C:
+Imagine constructing a response to client C that needs to verify its request `C` is in the tree:
 
 1. To compute `h(CD)` the client needs `D` (client C remembers the `C` it sent).
 2. To compute `h(ABCD)` the client already has `h(CD)` from step #1, so it needs `h(AB)`.
