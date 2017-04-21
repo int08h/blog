@@ -5,6 +5,8 @@ description = "A look at Roughtime, an internet-scale secure time synchronizatio
 
 +++
 
+\[*Addendum*: related [Hacker News](https://news.ycombinator.com/item?id=14164662) discussion\]
+
 [Roughtime](https://roughtime.googlesource.com/roughtime/) is a protocol designed to provide internet-scale secure time synchronization and address shortcomings of older protocols like NTP.
 
 # Why This Matters
