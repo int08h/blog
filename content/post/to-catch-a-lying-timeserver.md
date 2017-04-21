@@ -95,29 +95,29 @@ Recall that Roughtime uses a Merkle Tree of client requests to construct its bat
 
 [^8]: This elegant idea shows up in [many](https://www.certificate-transparency.org/log-proofs-work) [other](https://blog.ethereum.org/2015/11/15/merkling-in-ethereum/) [places](https://petertodd.org/2016/opentimestamps-announcement).
 
-An example might help. Consider this idealized Merkle Tree constructed from seven requests, `A` though `G`:
+An example might help. Consider this simplified Merkle Tree constructed from seven requests, `A` though `G`:
 
 ```text
-             _____ h(ABCDEFG) _____            
-            /                      \
-       h(ABCD)                    h(EFG)
-      /       \                   /     \
-   h(AB)       h(CD)           h(EF)     h(G)
-   /   \       /   \           /   \
- h(A)  h(B)  h(C)  h(D)      h(E)  h(F)
+             _____ h(ABCD|EFG) _____            
+            /                       \
+       h(AB|CD)                    h(EF|G)
+      /       \                    /     \
+   h(A|B)     h(C|D)            h(E|F)   h(G)
+   /   \       /   \            /   \
+ h(A)  h(B)  h(C)  h(D)       h(E)  h(F)
 
 h(...) = SHA512
 ```
 
 Imagine constructing a response to client C that needs to verify its request `C` is in the tree:
 
-1. To compute `h(CD)` the client needs `D` (client C remembers the `C` it sent).
-2. To compute `h(ABCD)` the client already has `h(CD)` from step #1, so it needs `h(AB)`.
-3. For `h(ABCDEFG)` the client has `h(ABCD)` from step #2 and needs `h(EFG)`.
+1. To compute `h(C|D)` the client needs `h(D)` (client C remembers the `h(C)` it sent).
+2. To compute `h(AB|CD)` the client already has `h(C|D)` from step #1, so it needs `h(A|B)`.
+3. For the root, `h(ABCD|EFG)`, the client has `h(AB|CD)` from step #2 and needs `h(EF|G)`.
 
-Thus client C is sent `h(D)`, `h(AB)`, and `h(EFG)`.
+Thus client C is sent `h(D)`, `h(A|B)`, and `h(EF|G)`.
 
-Hopefully it's clearer now where the 744 byte response size comes from: `ceil(log2(64)) == 6` and `6 * 64 bytes per sha512 == 384 bytes`. Minimum Roughtime response size of 360 bytes + 384 bytes of tree path data = 744 bytes total.
+Hopefully it's clearer how the 744 byte response size for a server batching 64 requests is obtained: `ceil(log2(64)) == 6` and `6 * 64 bytes per sha512 == 384 bytes`. Minimum Roughtime response size of 360 bytes + 384 bytes of tree path data = 744 bytes total.
 
 # Catching Lying Servers
 
