@@ -15,7 +15,7 @@ to create and display the Roughtime messages[^1].
 
 [^1]: Using commit `523ff4a`
 
-# Creating a Nearenough `RoughtimeClient` Instance
+# Nearenough Client Instantiation
 
 `RoughtimeClient` is the high-level Nearenough API for interacting with a Roughtime server. 
 The constructor requires one argument: the server's long-term key. We'll be interacting 
@@ -32,7 +32,7 @@ with Google's server (`roughtime.sandbox.google.com`) and its long-term public k
   RoughtimeClient client = new RoughtimeClient(GOOGLE_SERVER_PUBKEY);
 ```
 
-# Client Request 
+# Client Requests
 
 All Roughtime operations are initiated by a client request which
 must be >=1024 bytes long. The request has two tags: 
@@ -40,7 +40,7 @@ must be >=1024 bytes long. The request has two tags:
 1. `NONC` with the 64-byte client nonce.
 2. `PAD` to pad the request up to the 1024 byte minimum size.
 
-## Creating A Request
+## Creating a Request
 
 Creating a request is a one-liner:
 

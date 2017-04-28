@@ -1,3 +1,4 @@
+/* Merriweather */
 @font-face {
   font-family: 'Merriweather';
   font-style: normal;
@@ -30,11 +31,20 @@
        url('/font/merriweather-v15-latin-bolditalic.woff') format('woff'); 
 }
 
+/* Input Mono */
 @font-face {
   font-family: 'Input Mono';
   src: url('/font/InputMonoCompressed-ExtraLight.woff2') format('woff2'),
        url('/font/InputMonoCompressed-ExtraLight.woff') format('woff');
   font-weight: 200;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Input Mono';
+  src: url('/font/InputMonoCompressed-Light.woff2') format('woff2'),
+       url('/font/InputMonoCompressed-Light.woff') format('woff');
+  font-weight: 300;
   font-style: normal;
 }
 
@@ -70,6 +80,7 @@
   font-style: italic;
 }
 
+/* Input Sans */
 @font-face {
   font-family: 'Input Sans';
   src: url('/font/InputSansCompressed-ExtraLight.woff2') format('woff2'),
@@ -371,7 +382,7 @@ header .hr {
 }
 
 .toc-container code {
-  font-weight: 200;
+  font-weight: 300;
 }
 
 .toc-container a {
