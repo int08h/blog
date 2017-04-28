@@ -128,6 +128,7 @@ blockquote {
   padding: 1.2rem 1rem 1.2rem 2rem;
   background: #ECEFF1;
   border-left: 4px solid #90A4AE;
+  overflow: auto;
 }
 blockquote > p {
   margin: 1rem 0;
@@ -334,3 +335,14 @@ header .hr {
 .figshrink img {
   max-width: 90%;
 }
+
+#toc {
+  float: right;
+  width: 20.0rem;
+  position: relative;
+  margin: 10px 10px 10px 10px;
+  font-family: "Input Sans";
+  font-weight: 200;
+  font-size: 80%;
+}
+

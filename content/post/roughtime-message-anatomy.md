@@ -20,7 +20,7 @@ to create and display the Roughtime messages[^1].
 `RoughtimeClient` is the high-level Nearenough API for interacting with a Roughtime server. 
 The constructor requires one argument: the server's long-term key. We'll be interacting 
 with Google's server (`roughtime.sandbox.google.com`) and its long-term public key is found in the project's 
-[list](https://roughtime.googlesource.com/roughtime/+/master/roughtime-servers.json) of servers[^2].
+[list](https://roughtime.googlesource.com/roughtime/+/master/roughtime-servers.json) of servers.
 
 ```java
   // Long-term public key of Google's Roughtime server
@@ -31,8 +31,6 @@ with Google's server (`roughtime.sandbox.google.com`) and its long-term public k
   // Create a new RoughtimeClient instance using Nearenough client API
   RoughtimeClient client = new RoughtimeClient(GOOGLE_SERVER_PUBKEY);
 ```
-
-[^2]: `7ad3da688c5c04c635a14786a70bcf30224cc25455371bf9d4a2bfb64b682534` at the time of writting
 
 # Client Request 
 
@@ -65,7 +63,7 @@ How to read the output:
 
 * `RtMessage|2|` indicates the message has two tags.
 * `NONC(64)` tag with a 64 byte long nonce value (`aaacc1a6d...`)
-* `PAD(944)` tag with a 944 bytes of zeros
+* `PAD(944)` tag with 944 bytes of zeros
 
 ## Encoding for Transmission
 
@@ -80,6 +78,8 @@ Static methods on `RtWire` encode an `RtMessage` into a `ByteBuf` for network tr
   // Or, if you're in the NIO world and need a Java ByteBuffer
   ByteBuffer nioBuf = buf.nioBuffer();
 ```
+
+## Dissecting the On-The-Wire Message
 
 The on-the-wire encoded message can be hex-dumped via Netty's 
 `ByteBufUtil.prettyHexDump()`:
@@ -99,8 +99,4 @@ The on-the-wire encoded message can be hex-dumped via Netty's
 |000003f0| 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 |................|
 +--------+-------------------------------------------------+----------------+
 ```
-
-## Dissecting the On-The-Wire Message
-
-asd
 
