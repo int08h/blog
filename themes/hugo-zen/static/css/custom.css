@@ -345,6 +345,7 @@ header .hr {
   font-family: "Input Sans";
   font-weight: 200;
   font-size: 1.4rem;
+  font-feature-settings: "ss11" 1, "ss12" 1, "ss02" 1, "ss03" 1, "ss10" 1, "zero" 1;
   border: 1px solid #ECEFF1;
 }
 
