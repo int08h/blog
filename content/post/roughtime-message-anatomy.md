@@ -151,8 +151,6 @@ RtMessage|5|{
   }
   INDX(4) = 00000000
 }
-
-midpoint    : 2017-04-27T22:03:42.178Z (radius 1 sec)
 ```
 
 Working through the response:
@@ -202,4 +200,6 @@ its "true time" lies within the span.
   Instant midpoint = Instant.ofEpochMilli(client.midpoint() / 1_000L);
   int radiusSec = client.radius() / 1_000_000;
   System.out.println("midpoint: " + midpoint + " (radius " + radiusSec + " sec)");
+
+  // midpoint: 2017-04-27T22:03:42.178Z (radius 1 sec)
 ```
