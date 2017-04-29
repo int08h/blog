@@ -248,6 +248,11 @@ ol > li {
   margin-left: 4.0rem;
 }
 
+ol ol, ol ul, ul ol, ul ul {
+  margin: 0.5rem 0 1.0rem 0;
+  font-size: 100%;
+}
+
 .container {
   width: 90%;
   max-width: 800px;

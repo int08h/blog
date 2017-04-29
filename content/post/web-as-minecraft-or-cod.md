@@ -11,7 +11,7 @@ take a moment and do so. It's entertaining, insightful, and a tad wicked.
 The talk concludes with a profound question about the future of the Web. Maciej identifies two 
 competing visions:
 
-## Web As Minecraft
+# Web As Minecraft
 
 > The first vision is the **Web as Minecraft**--an open world with simple pieces that obey simple rules. 
 > The graphics are kind of clunky, but that’s not the point, and nobody cares.
@@ -29,7 +29,7 @@ These simple rules gave us the first [webcam](http://www.bbc.com/news/technology
 [Craigslist](www.craigslist.com), and [Blogger](http://www.blogger.com) amongst others. 
 And I would be remiss to not include Google's so-simple-it-hurts search interface.
 
-## Web As Call-of-Duty
+# Web As Call-of-Duty
 
 > The other vision is of the **web as Call of Duty**--an exquisitely produced, 
 > kind-of-but-not-really-participatory guided experience with breathtaking effects and lots of 
@@ -48,7 +48,7 @@ And I would be remiss to not include Google's so-simple-it-hurts search interfac
 
 Do you ever feel that way? Do you find many large web properties have a creepy similarity?
 
-## Conclusion
+# Conclusion
 
 Maciej turns to why this really matters:
 
