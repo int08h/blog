@@ -42,14 +42,6 @@
 
 @font-face {
   font-family: 'Input Mono';
-  src: url('/font/InputMonoCompressed-Light.woff2') format('woff2'),
-       url('/font/InputMonoCompressed-Light.woff') format('woff');
-  font-weight: 300;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Input Mono';
   src: url('/font/InputMonoCompressed-Regular.woff2') format('woff2'),
        url('/font/InputMonoCompressed-Regular.woff') format('woff');
   font-weight: 400;
@@ -91,14 +83,6 @@
 
 @font-face {
   font-family: 'Input Sans';
-  src: url('/font/InputSansCompressed-Light.woff2') format('woff2'),
-       url('/font/InputSansCompressed-Light.woff') format('woff');
-  font-weight: 300;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Input Sans';
   src: url('/font/InputSansCompressed-Regular.woff2') format('woff2'),
        url('/font/InputSansCompressed-Regular.woff') format('woff');
   font-weight: 400;
@@ -121,6 +105,12 @@ body {
   font-family: 'Merriweather', serif;
   font-weight: 400;
   background-color: #FCFCFC;
+}
+@media print {
+  body {
+    font-size: 1.4em;
+    line-height: 1.5;
+  }
 }
 
 pre, code {
@@ -322,7 +312,6 @@ ol ol, ol ul, ul ol, ul ul {
   color: #888;
   font-family: "Merriweather", monospace;
   font-weight: 400;
-  font-feature-settings: "ss11" 1, "ss12" 1, "ss02" 1, "ss03" 1, "ss10" 1, "zero" 1;
 }
 
 .entry-meta-main {
@@ -367,7 +356,7 @@ header .hr {
   margin: 3.0rem 0 2.0rem 2.0rem;
   padding: 1.0rem 1.5rem 1.5rem 1.5rem;
   font-family: "Input Sans";
-  font-weight: 300;
+  font-weight: 400;
   font-size: 1.4rem;
   font-feature-settings: "ss11" 1, "ss12" 1, "ss02" 1, "ss03" 1, "ss10" 1, "zero" 1;
   border: 1px solid #e1e1e1;
@@ -387,7 +376,7 @@ header .hr {
 }
 
 .toc-container code {
-  font-weight: 300;
+  font-weight: 400;
 }
 
 .toc-container a {
