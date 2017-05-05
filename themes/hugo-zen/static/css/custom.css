@@ -31,40 +31,6 @@
        url('/font/merriweather-v15-latin-bolditalic.woff') format('woff'); 
 }
 
-/* Mediator Serif Narrow */
-@font-face {
-  font-family: 'Mediator Serif Narrow';
-  font-style: normal;
-  font-weight: 400;
-  src: url('/font/MediatorSerifNarrow-Regular.woff2') format('woff2'), 
-       url('/font/MediatorSerifNarrow-Regular.woff') format('woff'); 
-}
-
-@font-face {
-  font-family: 'Mediator Serif Narrow';
-  font-style: italic;
-  font-weight: 400;
-  src: url('/font/MediatorSerifNarrow-Italic.woff2') format('woff2'), 
-       url('/font/MediatorSerifNarrow-Italic.woff') format('woff'); 
-}
-
-@font-face {
-  font-family: 'Mediator Serif Narrow';
-  font-style: normal;
-  font-weight: 700;
-  src: url('/font/MediatorSerifNarrow-Bold.woff2') format('woff2'), 
-       url('/font/MediatorSerifNarrow-Bold.woff') format('woff'); 
-}
-
-@font-face {
-  font-family: 'Mediator Serif Narrow';
-  font-style: italic;
-  font-weight: 700;
-  src: url('/font/MediatorSerifNarrow-BoldItalic.woff2') format('woff2'), 
-       url('/font/MediatorSerifNarrow-BoldItalic.woff') format('woff'); 
-}
-
-
 /* Input Mono */
 @font-face {
   font-family: 'Input Mono';
@@ -136,35 +102,27 @@ blockquote, dl, figure, form, ol, p, pre, table, ul {
 }
 
 body {
-  font-family: 'Mediator Serif Narrow', serif;
+  font-family: 'Merriweather', serif;
   font-weight: 400;
   background-color: #FCFCFC;
-  font-size: 1.7em;
-  line-height: 1.5;
-  font-feature-settings: "lnum", "liga", "kern";
 }
 @media print {
   body {
-    font-size: 1.5em;
+    font-size: 1.4em;
     line-height: 1.5;
   }
-}
-
-table {
-  font-feature-settings: "tnum";
 }
 
 pre, code {
   font-family: "Input Mono", monospace;
   font-weight: 400;
-  font-size: 90%;
+  font-size: 100%;
   font-feature-settings: "ss11" 1, "ss12" 1, "ss02" 1, "ss03" 1, "ss10" 1, "zero" 1;
 }
 
 pre > code {
   line-height: 1.5;
   overflow: auto;
-  font-size: 100%;
 }
 
 code {
@@ -352,7 +310,7 @@ ol ol, ol ul, ul ol, ul ul {
   letter-spacing: 0.05rem;
   line-height: 1rem;
   color: #888;
-  font-family: "Mediator Serif Narrow", monospace;
+  font-family: "Merriweather", monospace;
   font-weight: 400;
 }
 
