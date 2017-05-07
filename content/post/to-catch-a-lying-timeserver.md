@@ -125,7 +125,7 @@ Hopefully it's clearer how the 744 byte response size for a server batching 64 r
 
 Now to examine how request/response chaining allows clients to detect and tattle on misbehaving servers. The diagram below illustrates a sequence of chained requests and responses between one client and two servers:
 
-{{< figure src="/images/roughtime_chaining.png" link="/images/roughtime_chaining.png" caption="Roughtime request/response chaining (click to enlarge)" class="figshrink" >}}
+{{< figure src="/images/roughtime_chaining.png" link="/images/roughtime_chaining.png" caption="Figure 1 - Roughtime request/response chaining (click to enlarge)" class="figshrink" >}}
 
 Proof of server misbehavior emerges from two interlocking properties of the protocol: 
 

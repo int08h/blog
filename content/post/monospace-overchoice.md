@@ -76,9 +76,9 @@ Please forgive slight color and image size differences.
 
 [^4]: Why images and not direct comparison via webfont? For some of the commercial fonts I purchased only a desktop license of the book/regular weight. Webfont licenses are separate and vary in their terms and costs.
 
-{{< figure src="/images/by_width_windows.png" link="/images/by_width_windows.png" caption="Typefaces on Windows 7; 18pt unless otherwise noted (click to enlarge)" >}}
+{{< figure src="/images/by_width_windows.png" link="/images/by_width_windows.png" caption="Figure 1 - Typefaces on Windows 7; 18pt unless otherwise noted (click to enlarge)" >}}
 
-{{< figure src="/images/by_width_mac.png" link="/images/by_width_mac.png" caption="Typefaces on MacOS 10.12; 18pt unless otherwise noted (click to enlarge)" >}}
+{{< figure src="/images/by_width_mac.png" link="/images/by_width_mac.png" caption="Figure 2 - Typefaces on MacOS 10.12; 18pt unless otherwise noted (click to enlarge)" >}}
 
 Observations:
 
