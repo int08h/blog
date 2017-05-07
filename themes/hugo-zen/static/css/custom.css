@@ -120,6 +120,11 @@ pre > code {
   font-size: 1.6rem;
   overflow: auto;
 }
+@media print {
+  pre > code {
+    font-size: 1.5rem;
+  }
+}
 
 code {
   padding-top: 0;
