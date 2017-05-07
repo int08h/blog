@@ -1,5 +1,5 @@
 +++
-date = "2017-04-28"
+date = "2017-05-06"
 title = "About int08h"
 description = ""
 hidefromhome = "true"
@@ -39,6 +39,6 @@ Because the `.com` domain of my favorite PC interrupt, `int13h`, was already tak
 # Colophon
 
 Generated using [Hugo](https://gohugo.io/). Theme derived from [Hugo-Zen](https://github.com/rakuishi/hugo-zen).
-Body typeface is [Merriweather](https://fonts.google.com/specimen/Merriweather).
-Titles, headings, and monospace from the [Input](http://input.fontbureau.com/) family.
+Body typeface is [FF Franziska](http://www.fffranziska.com/).
+Titles, headings, and monospace from DJR's [Input](http://input.fontbureau.com/) family.
 Syntax highlighting by [`highlight.js`](https://highlightjs.org/).
