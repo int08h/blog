@@ -35,7 +35,7 @@ Such elegance is not without tradeoffs. We'll investigate two commonly discussed
 >   * **Thread** - An algorithm instance on a multiprocessor/multicore shared memory system. We assume multiple threads are able to execute simultaneously.
 >   * **Completes its call** - An invocation of the `push` or `pop` method that returns control to the caller thread.
 
-[^7]: More details on [progress conditions](http://doc.akka.io/docs/akka/current/general/terminology.html#Non-blocking_Guarantees__Progress_Conditions_)  
+[^7]: More details on [progress conditions](http://doc.akka.io/docs/akka/current/general/terminology.html#Non-blocking_Guarantees__Progress_Conditions_).
 
 # Algorithm Properties
 
