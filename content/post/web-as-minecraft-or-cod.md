@@ -26,7 +26,7 @@ full-blown [computers](http://minecraft.gamepedia.com/Tutorials/Redstone_compute
 themselves could run Minecraft.
 
 These simple rules gave us the first [webcam](http://www.bbc.com/news/technology-20439301),
-[Craigslist](www.craigslist.com), and [Blogger](http://www.blogger.com) amongst others. 
+[Craigslist](http://www.craigslist.com), and [Blogger](http://www.blogger.com) amongst others. 
 And I would be remiss to not include Google's so-simple-it-hurts search interface.
 
 # Web As Call-of-Duty

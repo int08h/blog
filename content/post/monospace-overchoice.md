@@ -100,7 +100,7 @@ Cutting to the chase, I picked [Input Mono](http://input.fontbureau.com/) for se
 1. **Proportional styles included** -- the Input family includes proportional Sans and Serif versions! This greatly expands design possibilities for consistent type "branding" on the site.  
 1. **Generous and simple licensing** -- the Input Series "mini" license fits perfectly: all 168 Input styles on 3 desktops and 15k monthly unique web visitors for USD $200.
 
-[^6]: Observant readers will note that the `g`, `i` and `l` glyphs differ in the Windows and MacOS screenshots. The Input [previewer](input.fontbureau.com/preview/) makes it easy to download a customized font. My Mac had a customized Input instance installed whereas the Windows box did not.
+[^6]: Observant readers will note that the `g`, `i` and `l` glyphs differ in the Windows and MacOS screenshots. The Input [previewer](http://input.fontbureau.com/preview/) makes it easy to download a customized font. My Mac had a customized Input instance installed whereas the Windows box did not.
 
 # Closing Thoughts
 

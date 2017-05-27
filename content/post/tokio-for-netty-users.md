@@ -17,12 +17,14 @@ to Tokio by translating Netty concepts and idioms to their Tokio equivalents.
 
 ## Codec
 
-## SimpleInboundChannelHandlerAdapter<T>
-
 ## Group
 
 ## EventLoop
 
+## Transports
 
+## ByteBufToMessageEncoder<T>
+
+## SimpleInboundChannelHandlerAdapter<T>
 
 
