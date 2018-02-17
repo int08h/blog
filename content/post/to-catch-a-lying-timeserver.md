@@ -20,7 +20,7 @@ The dominant internet time-sync protocol, Network Time Protocol (NTP), is showin
 2. Clients that find an NTP server responding with bad values have no way to prove to others that a particular server is a bad actor[^2].
 3. There are protocol (mis)features that can be abused to create DDoS traffic[^3].
 
-[^1]: Yes, there are [authentication mechanisms](https://tools.ietf.org/html/rfc5906) in NTPv4 as well as in-development NTP/PTP authentication protocols like [NTS](https://tools.ietf.org/html/draft-ietf-ntp-network-time-security-14). None of these have seen widespread deployment on the public internet, in mobile devices, or as out-of-the-box OS defaults. Furthermore these solutions require that clients unconditionally trust one or move servers and/or require computationally expensive handshakes.  
+[^1]: Yes, there are [authentication mechanisms](https://tools.ietf.org/html/rfc5906) in NTPv4 as well as in-development NTP/PTP authentication protocols like [NTS](https://tools.ietf.org/html/draft-ietf-ntp-network-time-security-14). None of these have seen widespread deployment on the public internet, in mobile devices, or as out-of-the-box OS defaults. Furthermore these solutions require that clients unconditionally trust one or more servers and/or require computationally expensive handshakes.  
 
 [^2]: "Proof" in this case being a cryptographically secure record that can be audited by an untrusted third party. Think spiritual cousin of [certificate transparency](https://www.certificate-transparency.org/). 
 
