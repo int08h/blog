@@ -1,5 +1,5 @@
 +++
-date = "2017-05-06"
+date = "2018-02-17"
 title = "About int08h"
 description = ""
 hidefromhome = "true"
@@ -15,7 +15,7 @@ PGP key at [keybase.io/sstock](https://keybase.io/sstock) if required.
 
 # License and Disclaimer
 
-All content on `int08h` is copyright (c) 2017 int08h LLC and licensed under the Creative Commons 
+All content on `int08h` is copyright (c) 2017-2018 int08h LLC and licensed under the Creative Commons 
 [Attribution-ShareAlike 4.0 License](https://creativecommons.org/licenses/by-sa/4.0/legalcode). 
 
 Stuart Stock writes on `int08h` in his personal capacity and is solely responsible for its content. 
