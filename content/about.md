@@ -39,6 +39,6 @@ Because the `.com` domain of my favorite PC interrupt, `int13h`, was already tak
 # Colophon
 
 Generated using [Hugo](https://gohugo.io/). Theme derived from [Hugo-Zen](https://github.com/rakuishi/hugo-zen).
-Body typeface is [FF Franziska](http://www.fffranziska.com/).
+Body typeface is [FF Franziska](http://fffranziska.com/).
 Titles, headings, and monospace from DJR's [Input](http://input.fontbureau.com/) family.
 Syntax highlighting by [`highlight.js`](https://highlightjs.org/).
