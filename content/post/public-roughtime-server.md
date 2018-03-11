@@ -1,7 +1,7 @@
 +++
 date = "2018-02-17T19:01:26-05:00"
 title = "roughtime.int08h.com"
-description = "About the roughenough-based Roughtime server at roughenough.int08h.com:2002"
+description = "About the roughenough-based Roughtime server at roughtime.int08h.com:2002"
 
 +++
 
