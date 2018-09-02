@@ -5,7 +5,7 @@
        url('/font/ff-franziska-book.woff') format('woff');
   font-weight: 400;
   font-style: normal;
-  font-display: swap;
+  unicode-range: U+A,U+20-7E,U+A9,U+2013,U+2018,U+2019,U+201C,U+201D,U+2026;
 }
 
 @font-face {
@@ -14,7 +14,7 @@
        url('/font/ff-franziska-book-italic.woff') format('woff');
   font-weight: 400;
   font-style: italic;
-  font-display: swap;
+  unicode-range: U+A,U+20-7E,U+A9,U+2013,U+2018,U+2019,U+201C,U+201D,U+2026;
 }
 
 @font-face {
@@ -23,7 +23,7 @@
        url('/font/ff-franziska-bold.woff') format('woff');
   font-weight: 700;
   font-style: normal;
-  font-display: swap;
+  unicode-range: U+A,U+20-7E,U+A9,U+2013,U+2018,U+2019,U+201C,U+201D,U+2026;
 }
 
 
@@ -34,7 +34,7 @@
        url('/font/InputMonoCompressed-ExtraLight.woff') format('woff');
   font-weight: 200;
   font-style: normal;
-  font-display: swap;
+  unicode-range: U+A,U+20-7E,U+A9,U+2013,U+2018,U+2019,U+201C,U+201D,U+2026;
 }
 
 @font-face {
@@ -43,7 +43,7 @@
        url('/font/InputMonoCompressed-Regular.woff') format('woff');
   font-weight: 400;
   font-style: normal;
-  font-display: swap;
+  unicode-range: U+A,U+20-7E,U+A9,U+2013,U+2018,U+2019,U+201C,U+201D,U+2026;
 }
 
 @font-face {
@@ -52,7 +52,7 @@
        url('/font/InputMonoCompressed-Italic.woff') format('woff');
   font-weight: 400;
   font-style: italic;
-  font-display: swap;
+  unicode-range: U+A,U+20-7E,U+A9,U+2013,U+2018,U+2019,U+201C,U+201D,U+2026;
 }
 
 @font-face {
@@ -61,7 +61,7 @@
        url('/font/InputMonoCompressed-Bold.woff') format('woff');
   font-weight: 700;
   font-style: normal;
-  font-display: swap;
+  unicode-range: U+A,U+20-7E,U+A9,U+2013,U+2018,U+2019,U+201C,U+201D,U+2026;
 }
 
 @font-face {
@@ -70,7 +70,7 @@
        url('/font/InputMonoCompressed-BoldItalic.woff') format('woff');
   font-weight: 700;
   font-style: italic;
-  font-display: swap;
+  unicode-range: U+A,U+20-7E,U+A9,U+2013,U+2018,U+2019,U+201C,U+201D,U+2026;
 }
 
 /* Input Sans */
@@ -80,7 +80,7 @@
        url('/font/InputSansCompressed-ExtraLight.woff') format('woff');
   font-weight: 200;
   font-style: normal;
-  font-display: swap;
+  unicode-range: U+A,U+20-7E,U+A9,U+2013,U+2018,U+2019,U+201C,U+201D,U+2026;
 }
 
 @font-face {
@@ -89,7 +89,7 @@
        url('/font/InputSansCompressed-Regular.woff') format('woff');
   font-weight: 400;
   font-style: normal;
-  font-display: swap;
+  unicode-range: U+A,U+20-7E,U+A9,U+2013,U+2018,U+2019,U+201C,U+201D,U+2026;
 }
 
 @font-face {
@@ -98,7 +98,7 @@
        url('/font/InputSansCompressed-Italic.woff') format('woff');
   font-weight: 400;
   font-style: italic;
-  font-display: swap;
+  unicode-range: U+A,U+20-7E,U+A9,U+2013,U+2018,U+2019,U+201C,U+201D,U+2026;
 }
 
 blockquote, dl, figure, form, ol, p, pre, table, ul {
