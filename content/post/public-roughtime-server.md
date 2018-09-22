@@ -13,7 +13,7 @@ It does! So I bring to you a public Roughtime server:
 roughtime.int08h.com port 2002
 ```
 
-The server runs [roughenough](https://github.com/int08h/roughenough) (no surprise) on a Google Compute Engine
+The server runs [roughenough](https://github.com/int08h/roughenough) on a Google Compute Engine
 instance in us-central1. 
 
 Time is sourced from Google's [public NTP servers](https://developers.google.com/time/) 
@@ -24,7 +24,11 @@ provide "Roughtime UTC" as specificed in the
 # Public Key 
 
 ```
-016e6e0284d24c37c6e4d7d8d5b4e1d3c1949ceaa545bf875616c9dce0c9bec1
+in hex:
+  016e6e0284d24c37c6e4d7d8d5b4e1d3c1949ceaa545bf875616c9dce0c9bec1
+
+in base64:
+  AW5uAoTSTDfG5NfY1bTh08GUnOqlRb+HVhbJ3ODJvsE=
 ```
 
 That's the server's long-term public key which is also stuffed into a DNS `TXT` record should 
